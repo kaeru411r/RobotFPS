@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RobotBase : MonoBehaviour
 {
-    [SerializeField, HideInInspector]
+    [SerializeField]
     Mount[] _mounts = new Mount[0];
 
     public Mount[] Mounts { get => _mounts;}
@@ -19,5 +20,13 @@ public class RobotBase : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnFire(InputAction.CallbackContext callback)
+    {
+        if(callback.phase == InputActionPhase.Started)
+        {
+            Debug.Log(1);
+        }
     }
 }

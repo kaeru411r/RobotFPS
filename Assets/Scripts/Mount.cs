@@ -23,7 +23,7 @@ public class Mount
 
     private Mount()
     {
-        Debug.Log(2);
+        //Debug.Log(2);
     }
 
     public Mount(RobotBase robot)
