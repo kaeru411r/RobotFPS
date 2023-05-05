@@ -14,21 +14,44 @@ public class Mount
 
     RobotBase _robot = null;
 
-    public int i;
+    bool _isInitialized = false;
 
-    public UnitBase Unit { get => _unit; set => _unit = value; }
-    public GameObject MountBase { get => _mountBase;}
-    public RobotBase Robot { get => _robot;}
-    public int I { get => i; set => i = value; }
-
-    private Mount()
+    public UnitBase Unit
     {
-        //Debug.Log(2);
+        get => _unit;
+        set
+        {
+            _unit = value;
+            UnitSet();
+        }
+    }
+    public GameObject MountBase { get => _mountBase; }
+    public RobotBase Robot
+    {
+        get
+        {
+            if (!_isInitialized)
+            {
+                Debug.LogError("‰Šú‰»‚ªÏ‚ñ‚Å‚¢‚Ü‚¹‚ñ");
+            }
+            return _robot;
+        }
     }
 
-    public Mount(RobotBase robot)
+    public bool IsInitialized { get => _isInitialized; }
+
+    public void Init(RobotBase robot)
     {
-        Debug.Log(1);
         _robot = robot;
+        _isInitialized = true;
+        UnitSet();
+    }
+
+    void UnitSet()
+    {
+        if (Robot != null &&_unit != null)
+        {
+            _unit.Set(Robot);
+        }
     }
 }

@@ -8,25 +8,43 @@ public class RobotBase : MonoBehaviour
     [SerializeField]
     Mount[] _mounts = new Mount[0];
 
-    public Mount[] Mounts { get => _mounts;}
+    List<IWepon> _wepons = new List<IWepon>();
 
-    // Start is called before the first frame update
-    void Start()
+
+    public Mount[] Mounts
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void OnFire(InputAction.CallbackContext callback)
-    {
-        if(callback.phase == InputActionPhase.Started)
+        get => _mounts;
+        set
         {
-            Debug.Log(1);
+            _mounts = value;
+            MountsInit();
+        }
+    }
+
+    private void Awake()
+    {
+        MountsInit();
+    }
+
+    public void AddWepon(IWepon wepon)
+    {
+        _wepons.Add(wepon);
+    }
+
+    public void RemoveWepon(IWepon wepon)
+    {
+        _wepons.Remove(wepon);
+    }
+
+
+    void MountsInit()
+    {
+        foreach (var mount in _mounts)
+        {
+            if (mount.IsInitialized)
+            {
+                mount.Init(this);
+            }
         }
     }
 }

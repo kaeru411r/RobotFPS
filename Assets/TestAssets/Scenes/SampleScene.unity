@@ -593,22 +593,9 @@ MonoBehaviour:
   _mounts:
   - _unit: {fileID: 0}
     _mountBase: {fileID: 0}
-    i: 0
   - _unit: {fileID: 0}
     _mountBase: {fileID: 0}
-    i: 0
   - _unit: {fileID: 0}
     _mountBase: {fileID: 0}
-    i: 0
   - _unit: {fileID: 0}
     _mountBase: {fileID: 0}
-    i: 0
-  - _unit: {fileID: 0}
-    _mountBase: {fileID: 0}
-    i: 0
-  - _unit: {fileID: 0}
-    _mountBase: {fileID: 0}
-    i: 0
-  - _unit: {fileID: 0}
-    _mountBase: {fileID: 0}
-    i: 0
