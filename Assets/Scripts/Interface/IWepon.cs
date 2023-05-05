@@ -11,17 +11,18 @@ public interface IWepon
     /// 射撃ボタン操作
     /// </summary>
     /// <param name="phase"></param>
-    
-    public void Fire(WeponBase.Phase phase);
+
+    public void Fire(WeponActionPhase phase);
     /// <summary>
     /// 照準ボタン操作
     /// </summary>
     /// <param name="phase"></param>
-    public void Aim(WeponBase.Phase phase);
+    public void Aim(WeponActionPhase phase);
 
     /// <summary>
     /// リロードボタン操作
     /// </summary>
     /// <param name="phase"></param>
-    public void Reroad(WeponBase.Phase phase);
+    public void Reroad(WeponActionPhase phase);
 }
+

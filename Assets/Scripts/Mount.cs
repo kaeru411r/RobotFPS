@@ -51,7 +51,7 @@ public class Mount
 
     void UnitSet()
     {
-        if (Robot != null &&_unit != null)
+        if (Robot != null && _unit != null)
         {
             _unit.Set(Robot);
         }
