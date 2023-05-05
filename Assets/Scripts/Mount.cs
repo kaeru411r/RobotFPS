@@ -7,25 +7,20 @@ using UnityEngine;
 [System.Serializable]
 public class Mount
 {
-    [SerializeField]
+    [SerializeField, Tooltip("ユニット")]
     UnitBase _unit = null;
-    [SerializeField]
+    [SerializeField, Tooltip("ユニット基部")]
     GameObject _mountBase = null;
 
     RobotBase _robot = null;
 
     bool _isInitialized = false;
 
-    public UnitBase Unit
-    {
-        get => _unit;
-        set
-        {
-            _unit = value;
-            UnitSet();
-        }
-    }
+
+    /// <summary>ユニット基部</summary>
     public GameObject MountBase { get => _mountBase; }
+
+    /// <summary></summary>
     public RobotBase Robot
     {
         get
@@ -38,8 +33,15 @@ public class Mount
         }
     }
 
+    /// <summary>初期化が済んでいるか</summary>
     public bool IsInitialized { get => _isInitialized; }
 
+
+    /// <summary>
+    /// 初期化
+    /// 装備する機体を渡す
+    /// </summary>
+    /// <param name="robot"></param>
     public void Init(RobotBase robot)
     {
         _robot = robot;

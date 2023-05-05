@@ -1,11 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static WeponBase;
 
+/// <summary>
+/// 武器のインターフェース
+/// </summary>
 public interface IWepon
 {
-    public void Fire(Phase phase);
-    public void Aim(Phase phase);
-    public void Reroad(Phase phase);
+    /// <summary>
+    /// 射撃ボタン操作
+    /// </summary>
+    /// <param name="phase"></param>
+    
+    public void Fire(WeponBase.Phase phase);
+    /// <summary>
+    /// 照準ボタン操作
+    /// </summary>
+    /// <param name="phase"></param>
+    public void Aim(WeponBase.Phase phase);
+
+    /// <summary>
+    /// リロードボタン操作
+    /// </summary>
+    /// <param name="phase"></param>
+    public void Reroad(WeponBase.Phase phase);
 }
