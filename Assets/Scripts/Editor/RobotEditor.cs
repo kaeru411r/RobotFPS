@@ -1,16 +1,19 @@
-//using UnityEngine;
-//using UnityEditor;
+using UnityEngine;
+using UnityEditor;
 
 
-//[CustomEditor(typeof(RobotBase))]
-//public class RobotEditor : Editor
-//{
+[CustomEditor(typeof(RobotBase))]
+public class RobotEditor : Editor
+{
 
 
-//    bool a = false;
+    //    bool a = false;
 
-//    public override void OnInspectorGUI()
-//    {
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+    }
+}
 //        int listSize = 0;
 //        serializedObject.Update();
 
