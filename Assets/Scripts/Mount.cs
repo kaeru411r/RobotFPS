@@ -9,10 +9,11 @@ public class Mount
 {
     [SerializeField, Tooltip("ユニット")]
     UnitBase _unit = null;
-    [SerializeField, Tooltip("ユニット基部")]
-    GameObject _mountBase = null;
+    [SerializeField, Tooltip("装備できるユニットと、その接続パーツのリスト")]
+    UnitBase[] _supportedUnits;
 
     RobotBase _robot = null;
+    GameObject _mountBase = null;
 
     bool _isInitialized = false;
 
@@ -55,5 +56,11 @@ public class Mount
         {
             _unit.Set(Robot);
         }
+    }
+
+
+    public void OnValidate()
+    {
+
     }
 }
