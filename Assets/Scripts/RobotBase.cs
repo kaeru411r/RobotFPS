@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class RobotBase : MonoBehaviour, IWepon
 
     List<WeponBase> _wepons = new List<WeponBase>();
     int _weponNumber = 0;
+    List<Func<int, int>> _onDamageEvents;
 
     public WeponBase Wepon
     {
@@ -38,6 +40,7 @@ public class RobotBase : MonoBehaviour, IWepon
     }
 
     public int WeponNumber { get => _weponNumber; set => _weponNumber = value; }
+    public List<Func<int, int>> OnDamageEvent { get => _onDamageEvents;}
 
     private void Awake()
     {
@@ -56,6 +59,15 @@ public class RobotBase : MonoBehaviour, IWepon
     public void RemoveWepon(WeponBase wepon)
     {
         _wepons.Remove(wepon);
+    }
+
+    public void AddOnDamage(Func<int, int> func)
+    {
+        _onDamageEvents.Add(func);
+    }
+    public void RemoveOnDamage(Func<int, int> func)
+    {
+        _onDamageEvents.Remove(func);
     }
 
 
@@ -94,4 +106,13 @@ public class RobotBase : MonoBehaviour, IWepon
         }
     }
 
+    public int OnDamage(int damage)
+    {
+        foreach(var func in _onDamageEvents)
+        {
+            damage = func(damage);
+        }
+
+        return damage;
+    }
 }

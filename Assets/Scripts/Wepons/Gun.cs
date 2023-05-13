@@ -19,12 +19,25 @@ public class Gun : WeponBase
     bool _isFirering = false;
     bool _isReloading = false;
     bool _isAiming = false;
+    bool _isPause = false;
     float _fireTime = 0;
 
     public FireMode Firetype { get => _fireMode; set => _fireMode = value; }
 
+
+    public override void Pause()
+    {
+        _isPause = true;
+    }
+
+    public override void Resume()
+    {
+        _isPause = false;
+    }
+
     public override void OnAim(WeponActionPhase phase)
     {
+        if(_isPause) { return; }
         if (phase == WeponActionPhase.Started)
         {
             _isAiming = true;
@@ -37,6 +50,7 @@ public class Gun : WeponBase
 
     public override void OnFire(WeponActionPhase phase)
     {
+        if (_isPause) { return; }
         if (phase == WeponActionPhase.Started)
         {
             _isFirering = true;
@@ -49,6 +63,7 @@ public class Gun : WeponBase
 
     public override void OnReload(WeponActionPhase phase)
     {
+        if (_isPause) { return; }
         if (phase == WeponActionPhase.Started)
         {
             StartCoroutine(Reload());
@@ -64,16 +79,17 @@ public class Gun : WeponBase
     {
         while (true)
         {
-            if (_isReloading)
+            if (_isPause) { }
+            else if (_isReloading)
             {
                 _fireTime = 0;
             }
-            else if(_fireTime <= 0)
-            { 
+            else if (_fireTime <= 0)
+            {
                 if (_isFirering)
                 {
                     _fireTime = 1 / (_fireRate / 60);
-                    if(_fireMode == FireMode.SemiAuto)
+                    if (_fireMode == FireMode.SemiAuto)
                     {
                         _isFirering = false;
                     }
@@ -97,6 +113,7 @@ public class Gun : WeponBase
         while (true)
         {
             yield return null;
+            if(_isPause) { continue; }
             time -= Time.deltaTime;
             if(time < 0)
             {
