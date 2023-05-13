@@ -6,5 +6,5 @@ public enum WeponActionPhase
 {
     Started,
     Performed,
-    Canceled
+    Canceled,
 }
