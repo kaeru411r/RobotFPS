@@ -16,7 +16,7 @@ public abstract class WeponBase : UnitBase, IWepon
     }
     public override void Detach()
     {
-        _robot.RemoveWepon(this);
+        _robot?.RemoveWepon(this);
     }
     public abstract void OnFire(WeponActionPhase phase);
     public abstract void OnAim(WeponActionPhase phase);

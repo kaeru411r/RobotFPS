@@ -46,10 +46,12 @@ public class Gun : WeponBase
         if (phase == WeponActionPhase.Started)
         {
             _isAiming = true;
+            Debug.Log("Aiming");
         }
         else if (phase == WeponActionPhase.Canceled)
         {
             _isAiming = false;
+            Debug.Log("Aimed");
         }
     }
 
