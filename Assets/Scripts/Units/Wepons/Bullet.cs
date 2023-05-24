@@ -49,6 +49,8 @@ public class Bullet : MonoBehaviour
         if (hit.gameObject.layer == _enemyLayer)
         {
             Debug.Log("Hit");
+            var result = hit.gameObject.GetComponent<RobotBase>()?.OnDamage(_atk);
+            Debug.Log(result.Damage);
         }
 
         Destroy(gameObject);

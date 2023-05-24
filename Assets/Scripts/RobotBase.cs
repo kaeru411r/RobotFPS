@@ -13,13 +13,17 @@ public class RobotBase : MonoBehaviour, IWepon
 {
     [SerializeField, Tooltip("É}ÉEÉìÉg")]
     Mount[] _mounts = new Mount[0];
+    [SerializeField, Tooltip("ç≈ëÂëÃóÕ")]
+    int _maxHp = 0;
 
     List<WeponBase> _wepons = new List<WeponBase>();
     int _weponNumber = 0;
-    List<Func<int, int>> _onDamageFuncs = new List<Func<int, int>>();
+    int _hp = 0;
+    List<Func<float, float>> _onDamageFuncs = new List<Func<float, float>>();
     List<Action<WeponActionPhase>> _onFireActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onReloadActions = new List<Action<WeponActionPhase>>();
+    List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
 
     public WeponBase Wepon
     {
@@ -69,10 +73,17 @@ public class RobotBase : MonoBehaviour, IWepon
             }
         }
     }
-    public List<Func<int, int>> OnDamageEvent { get => _onDamageFuncs; }
+    public int Hp { get => _hp;}
 
     private void Awake()
     {
+        Init();
+    }
+
+
+    public void Init()
+    {
+        _hp = HpReset(_maxHp);
         MountsInit();
     }
 
@@ -98,11 +109,11 @@ public class RobotBase : MonoBehaviour, IWepon
         }
     }
 
-    public void AddOnDamage(Func<int, int> func)
+    public void AddOnDamage(Func<float, float> func)
     {
         _onDamageFuncs.Add(func);
     }
-    public void RemoveOnDamage(Func<int, int> func)
+    public void RemoveOnDamage(Func<float, float> func)
     {
         _onDamageFuncs.Remove(func);
     }
@@ -144,10 +155,34 @@ public class RobotBase : MonoBehaviour, IWepon
         }
     }
 
-    public int OnDamage(int damage)
+    public AttackResult OnDamage(int damage)
     {
-        _onDamageFuncs?.ForEach(f => damage = f(damage));
+        float buf = damage;
+        _onDamageFuncs?.ForEach(f => buf = f(buf));
 
-        return damage;
+        var result = (int) buf;
+        _hp -= result;
+
+        var isKilled = false;
+        if(_hp <= 0)
+        {
+            isKilled = true;
+            Down();
+        }
+
+        return new AttackResult(result, isKilled);
+    }
+
+
+    int HpReset(int baseValue)
+    {
+
+        _onHpResetFuncs?.ForEach(f => baseValue = f(baseValue));
+        return baseValue;
+    }
+
+    void Down()
+    {
+        Debug.Log("Down");
     }
 }
