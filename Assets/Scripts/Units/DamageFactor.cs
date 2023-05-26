@@ -11,12 +11,12 @@ public class DamageFactor : UnitBase
     public override void Attach(RobotBase robot)
     {
         _robot = robot;
-        robot.AddOnDamage(Factor);
+        robot.OnDamageFuncs.Add(Factor);
     }
 
     public override void Detach()
     {
-        _robot.RemoveOnDamage(Factor);
+        _robot?.OnDamageFuncs.Remove(Factor);
     }
 
     public override void Pause()

@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 /// 機体の装備管理クラス
 /// 基本的に機体のほとんどのやり取りをこのクラスを介して行う
 /// </summary>
+[RequireComponent(typeof(HitPoint))]
 public class RobotBase : MonoBehaviour, IWepon
 {
     [SerializeField, Tooltip("マウント")]
@@ -18,7 +19,7 @@ public class RobotBase : MonoBehaviour, IWepon
 
     List<WeponBase> _wepons = new List<WeponBase>();
     int _weponNumber = 0;
-    int _hp = 0;
+    HitPoint _hp;
     List<Func<float, float>> _onDamageFuncs = new List<Func<float, float>>();
     List<Action<WeponActionPhase>> _onFireActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
@@ -51,13 +52,10 @@ public class RobotBase : MonoBehaviour, IWepon
         get => _weponNumber;
         set
         {
-            Debug.Log(1);
             if (_wepons.Count > 0 && _wepons.Count > value)
             {
-                Debug.Log(2);
                 if (Wepon)
                 {
-                    Debug.Log(3);
                     _onFireActions.Remove(Wepon.OnFire);
                     _onAimActions.Remove(Wepon.OnAim);
                     _onReloadActions.Remove(Wepon.OnReload);
@@ -65,7 +63,6 @@ public class RobotBase : MonoBehaviour, IWepon
                 _weponNumber = value;
                 if (Wepon)
                 {
-                    Debug.Log(4);
                     _onFireActions.Add(Wepon.OnFire);
                     _onAimActions.Add(Wepon.OnAim);
                     _onReloadActions.Add(Wepon.OnReload);
@@ -73,7 +70,12 @@ public class RobotBase : MonoBehaviour, IWepon
             }
         }
     }
-    public int Hp { get => _hp;}
+    public int HP { get => _hp.HP; }
+    public List<Func<float, float>> OnDamageFuncs { get => _onDamageFuncs; }
+    public List<Action<WeponActionPhase>> OnFireActions { get => _onFireActions; }
+    public List<Action<WeponActionPhase>> OnAimActions { get => _onAimActions; }
+    public List<Action<WeponActionPhase>> OnReloadActions { get => _onReloadActions; }
+    public List<Func<int, int>> OnHpResetFuncs { get => _onHpResetFuncs; }
 
     private void Awake()
     {
@@ -83,7 +85,9 @@ public class RobotBase : MonoBehaviour, IWepon
 
     public void Init()
     {
-        _hp = HpReset(_maxHp);
+        _hp = GetComponent<HitPoint>();
+        _hp.HPReset(HpReset(_maxHp));
+        _hp.OnDownAction += Down;
         MountsInit();
     }
 
@@ -103,22 +107,11 @@ public class RobotBase : MonoBehaviour, IWepon
     public void RemoveWepon(WeponBase wepon)
     {
         _wepons.Remove(wepon);
-        if(WeponNumber >= _wepons.Count)
+        if (WeponNumber >= _wepons.Count)
         {
             WeponNumber = _wepons.Count - 1;
         }
     }
-
-    public void AddOnDamage(Func<float, float> func)
-    {
-        _onDamageFuncs.Add(func);
-    }
-    public void RemoveOnDamage(Func<float, float> func)
-    {
-        _onDamageFuncs.Remove(func);
-    }
-
-
     void MountsInit()
     {
         foreach (var mount in _mounts)
@@ -160,17 +153,9 @@ public class RobotBase : MonoBehaviour, IWepon
         float buf = damage;
         _onDamageFuncs?.ForEach(f => buf = f(buf));
 
-        var result = (int) buf;
-        _hp -= result;
+        var result = _hp.Damage((int)buf);
 
-        var isKilled = false;
-        if(_hp <= 0)
-        {
-            isKilled = true;
-            Down();
-        }
-
-        return new AttackResult(result, isKilled);
+        return result;
     }
 
 
