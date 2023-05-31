@@ -11,8 +11,8 @@ public interface IWepon
     /// 射撃ボタン操作
     /// </summary>
     /// <param name="phase"></param>
-
     public void OnFire(WeponActionPhase phase);
+
     /// <summary>
     /// 照準ボタン操作
     /// </summary>
@@ -24,5 +24,12 @@ public interface IWepon
     /// </summary>
     /// <param name="phase"></param>
     public void OnReload(WeponActionPhase phase);
+
+    /// <summary>
+    /// 照準を定める
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="targetingMode"></param>
+    public void OnTargeting(Vector3 target, TargetingMode targetingMode);
 }
 

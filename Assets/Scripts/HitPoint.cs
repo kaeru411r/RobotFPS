@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ‘Ì—Í‚ğŠÇ—‚·‚é
+/// </summary>
 public class HitPoint : MonoBehaviour
 {
     [SerializeField, Tooltip("Å‘å‘Ì—Í")]
     int _maxHP;
-
+    [SerializeField, Tooltip("‘Ì—Í")]
     int _hp;
+
     Action _onDownAction;
 
     public int MaxHP { get => _maxHP; set => _maxHP = value; }
@@ -36,7 +40,6 @@ public class HitPoint : MonoBehaviour
         if (_hp <= 0)
         {
             isKilled = true;
-            value += _hp;
             _hp = 0;
             _onDownAction?.Invoke();
         }

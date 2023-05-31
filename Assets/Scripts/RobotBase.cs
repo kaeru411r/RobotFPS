@@ -9,21 +9,31 @@ using UnityEngine.InputSystem;
 /// 機体の装備管理クラス
 /// 基本的に機体のほとんどのやり取りをこのクラスを介して行う
 /// </summary>
-[RequireComponent(typeof(HitPoint))]
+[RequireComponent(typeof(HitPoint), typeof(Movement))]
 public class RobotBase : MonoBehaviour, IWepon
 {
     [SerializeField, Tooltip("マウント")]
     Mount[] _mounts = new Mount[0];
     [SerializeField, Tooltip("最大体力")]
     int _maxHp = 0;
+    [SerializeField, Tooltip("基本移動速度")]
+    float _speed;
+    [SerializeField, Tooltip("移動速度補正")]
+    Vector2 _speedCorrection;
+    [SerializeField, Tooltip("旋回速度")]
+    float _turnSpeed;
 
     List<WeponBase> _wepons = new List<WeponBase>();
     int _weponNumber = 0;
     HitPoint _hp;
+    Movement _movement;
     List<Func<float, float>> _onDamageFuncs = new List<Func<float, float>>();
     List<Action<WeponActionPhase>> _onFireActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onReloadActions = new List<Action<WeponActionPhase>>();
+    List<Action<Vector2>> _onMoveFuncs = new List<Action<Vector2>>();
+    List<Action<Vector3, TargetingMode>> _onTargetingActions = new List<Action<Vector3, TargetingMode>>();
+    List<Action<float>> _onTurnFuncs = new List<Action<float>>();
     List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
 
     public WeponBase Wepon
@@ -76,6 +86,7 @@ public class RobotBase : MonoBehaviour, IWepon
     public List<Action<WeponActionPhase>> OnAimActions { get => _onAimActions; }
     public List<Action<WeponActionPhase>> OnReloadActions { get => _onReloadActions; }
     public List<Func<int, int>> OnHpResetFuncs { get => _onHpResetFuncs; }
+    public List<Action<Vector3, TargetingMode>> OnTargetingActions { get => _onTargetingActions;}
 
     private void Awake()
     {
@@ -88,6 +99,12 @@ public class RobotBase : MonoBehaviour, IWepon
         _hp = GetComponent<HitPoint>();
         _hp.HPReset(HpReset(_maxHp));
         _hp.OnDownAction += Down;
+        _movement = GetComponent<Movement>();
+        _movement.Speed = _speed;
+        _movement.BackCorrection = _speedCorrection.y;
+        _movement.SideCorrection = _speedCorrection.x;
+        _movement.TurnSpeed = _turnSpeed;
+        _onMoveFuncs.Add(_movement.Move);
         MountsInit();
     }
 
@@ -96,6 +113,7 @@ public class RobotBase : MonoBehaviour, IWepon
     public void AddWepon(WeponBase wepon)
     {
         _wepons.Add(wepon);
+        _onTargetingActions.Add(wepon.OnTargeting);
         if (_wepons.Count == 1)
         {
             WeponNumber = 0;
@@ -107,6 +125,7 @@ public class RobotBase : MonoBehaviour, IWepon
     public void RemoveWepon(WeponBase wepon)
     {
         _wepons.Remove(wepon);
+        _onTargetingActions.Remove(wepon.OnTargeting);
         if (WeponNumber >= _wepons.Count)
         {
             WeponNumber = _wepons.Count - 1;
@@ -123,30 +142,41 @@ public class RobotBase : MonoBehaviour, IWepon
         }
     }
 
+
+    #region ========== 行動入力部 =====================================
+
+
     public void OnFire(WeponActionPhase phase)
     {
-        if (Wepon != null)
-        {
-
-            _onFireActions?.ForEach(a => a.Invoke(phase));
-        }
+        _onFireActions.ForEach(a => a.Invoke(phase));
     }
 
     public void OnAim(WeponActionPhase phase)
     {
-        if (Wepon != null)
-        {
-            _onAimActions?.ForEach(a => a.Invoke(phase));
-        }
+        _onAimActions.ForEach(a => a.Invoke(phase));
     }
 
     public void OnReload(WeponActionPhase phase)
     {
-        if (Wepon != null)
-        {
-            _onReloadActions?.ForEach(a => a.Invoke(phase));
-        }
+        _onReloadActions.ForEach(a => a.Invoke(phase));
     }
+
+    public void OnMove(Vector2 velocity)
+    {
+        _onMoveFuncs.ForEach(a => a.Invoke(velocity));
+    }
+
+    public void OnTurn(float turn)
+    {
+        _onTurnFuncs.ForEach(a => a.Invoke(turn));
+    }
+
+    public void OnTargeting(Vector3 angle, TargetingMode targetingMode)
+    {
+        _onTargetingActions.ForEach(a => a.Invoke(angle, targetingMode));
+    }
+
+    #endregion =====================================================
 
     public AttackResult OnDamage(int damage)
     {

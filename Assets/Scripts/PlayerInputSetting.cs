@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 
-[RequireComponent(typeof(PlayerInput))]
+/// <summary>
+/// ÉvÉåÉCÉÑÅ[ëÄçÏÇÃê›íËÇÇ∑ÇÈ
+/// </summary>
+[RequireComponent(typeof(PlayerInput), typeof(PlayerRobotCamera))]
 public class PlayerInputSetting : MonoBehaviour
 {
     [SerializeField, Tooltip("")]
@@ -12,25 +15,21 @@ public class PlayerInputSetting : MonoBehaviour
 
 
     PlayerInput _playerInput;
+    PlayerRobotCamera _robotCamera;
 
-    PlayerInput PlayerInput
+
+    private void Awake()
     {
-        get
-        {
-            if (_playerInput == null)
-            {
-                _playerInput = GetComponent<PlayerInput>();
-                _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
-            }
-            return _playerInput;
-        }
+        _playerInput = GetComponent<PlayerInput>();
+        _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
+        _robotCamera = GetComponent<PlayerRobotCamera>();
     }
 
-    private void OnValidate()
+    private void Start()
     {
         if (_robotBase)
         {
-            PlayerInput.actionEvents.Where(a => a.actionName.Contains("Fire")).FirstOrDefault()?
+            _playerInput.actionEvents.Where(a => a.actionName.Contains("Fire")).FirstOrDefault()?
                 .AddListener(callback =>
                 {
                     var phase = Input2Wepon(callback.phase);
@@ -39,7 +38,7 @@ public class PlayerInputSetting : MonoBehaviour
                         _robotBase.OnFire(phase.Value);
                     }
                 });
-            PlayerInput.actionEvents.Where(a => a.actionName.Contains("Aim")).FirstOrDefault()?
+            _playerInput.actionEvents.Where(a => a.actionName.Contains("Aim")).FirstOrDefault()?
                 .AddListener(callback =>
                 {
                     var phase = Input2Wepon(callback.phase);
@@ -48,7 +47,7 @@ public class PlayerInputSetting : MonoBehaviour
                         _robotBase.OnAim(phase.Value);
                     }
                 });
-            PlayerInput.actionEvents.Where(a => a.actionName.Contains("Reload")).FirstOrDefault()?
+            _playerInput.actionEvents.Where(a => a.actionName.Contains("Reload")).FirstOrDefault()?
                 .AddListener(callback =>
                 {
                     var phase = Input2Wepon(callback.phase);
@@ -57,6 +56,12 @@ public class PlayerInputSetting : MonoBehaviour
                         _robotBase.OnReload(phase.Value);
                     }
                 });
+            _playerInput.actionEvents.Where(a => a.actionName.Contains("Move")).FirstOrDefault()?
+                .AddListener(callback =>
+                {
+                    _robotBase.OnMove(callback.ReadValue<Vector2>());
+                });
+            _robotCamera.OnTargetSets.Add(_robotBase.OnTargeting);
         }
     }
 

@@ -50,7 +50,10 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log("Hit");
             var result = hit.gameObject.GetComponent<RobotBase>()?.OnDamage(_atk);
-            Debug.Log(result.Damage);
+            if (result != null)
+            {
+                Debug.Log(result.Damage);
+            }
         }
 
         Destroy(gameObject);

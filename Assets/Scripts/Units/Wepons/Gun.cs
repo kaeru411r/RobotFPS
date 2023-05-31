@@ -82,6 +82,15 @@ public class Gun : WeponBase
         base.Attach(robot);
         _rb = robot.GetComponent<Rigidbody>();
     }
+    public override void OnTargeting(Vector3 target, TargetingMode targetingMode)
+    {
+        if (targetingMode == TargetingMode.Position)
+        {
+            target = (target - transform.position).normalized;
+        }
+        Debug.DrawRay(transform.position, target * 10);
+        transform.rotation = Quaternion.LookRotation(target, Vector3.up);
+    }
 
     private void Start()
     {
@@ -150,6 +159,7 @@ public class Gun : WeponBase
             Debug.Log("Fire");
         }
     }
+
 
     public enum FireMode
     {

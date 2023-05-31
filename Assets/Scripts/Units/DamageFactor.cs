@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 被弾時に受けるダメージに補正をかける
+/// </summary>
 public class DamageFactor : UnitBase
 {
     [SerializeField, Tooltip("ダメージ倍率")]
