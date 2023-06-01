@@ -35,7 +35,11 @@ public class PlayerRobotCamera : MonoBehaviour
                 var ray = Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f));
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    _onTargetSets.ForEach(a => a.Invoke(hit.point, TargetingMode.Position));
+                    _onTargetSets.ForEach(a => a?.Invoke(hit.point, TargetingMode.Position));
+                }
+                else
+                {
+                    _onTargetSets.ForEach(a => a?.Invoke(_virtualCamera.transform.forward, TargetingMode.Angle));
                 }
             }
             yield return null;
