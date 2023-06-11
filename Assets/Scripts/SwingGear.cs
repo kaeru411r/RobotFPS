@@ -52,15 +52,10 @@ public class SwingGear : UnitBase
     {
         while (true)
         {
-            StringBuilder sb = new StringBuilder();
             Vector3 cross = Vector3.Cross(Vector3.up, _direction);
             Vector3 dir = Vector3.Cross(cross, transform.up).normalized;
             float angle = Vector3.Angle(transform.forward, dir);
-            sb.Append(angle);
-            Debug.DrawRay(transform.position, dir * 10);
             angle = Mathf.Min(angle, _turnSpeed * Time.fixedDeltaTime) * (Vector3.Dot(transform.right, dir) < 0 ? -1 : 1);
-            sb.Append(", " + angle);
-            Debug.Log(sb);
             transform.Rotate(transform.up, angle);
             yield return new WaitForFixedUpdate();
         }
