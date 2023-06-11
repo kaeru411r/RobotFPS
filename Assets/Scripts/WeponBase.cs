@@ -21,7 +21,7 @@ public abstract class WeponBase : UnitBase, IWepon
     public abstract void OnFire(WeponActionPhase phase);
     public abstract void OnAim(WeponActionPhase phase);
     public abstract void OnReload(WeponActionPhase phase);
-    public abstract void OnTargeting(Vector3 target, TargetingMode targetingMode);
+    public abstract void OnTargeting(TargetingData data);
 
 
     //---------------テスト用--------------------

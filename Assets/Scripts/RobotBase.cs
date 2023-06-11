@@ -32,8 +32,8 @@ public class RobotBase : MonoBehaviour, IWepon
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onReloadActions = new List<Action<WeponActionPhase>>();
     List<Action<Vector2>> _onMoveFuncs = new List<Action<Vector2>>();
-    List<Action<Vector3, TargetingMode>> _onTargetingActions = new List<Action<Vector3, TargetingMode>>();
-    List<Action<float>> _onTurnFuncs = new List<Action<float>>();
+    List<Action<TargetingData>> _onTargetingActions = new List<Action<TargetingData>>();
+    List<Action<Vector3>> _onTurnFuncs = new List<Action<Vector3>>();
     List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
 
     public WeponBase Wepon
@@ -86,7 +86,10 @@ public class RobotBase : MonoBehaviour, IWepon
     public List<Action<WeponActionPhase>> OnAimActions { get => _onAimActions; }
     public List<Action<WeponActionPhase>> OnReloadActions { get => _onReloadActions; }
     public List<Func<int, int>> OnHpResetFuncs { get => _onHpResetFuncs; }
-    public List<Action<Vector3, TargetingMode>> OnTargetingActions { get => _onTargetingActions;}
+    public List<Action<TargetingData>> OnTargetingActions { get => _onTargetingActions; }
+    public List<Action<Vector2>> OnMoveFuncs { get => _onMoveFuncs;}
+    public List<Action<Vector3>> OnTurnFuncs { get => _onTurnFuncs;}
+    public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
 
     private void Awake()
     {
@@ -103,7 +106,6 @@ public class RobotBase : MonoBehaviour, IWepon
         _movement.Speed = _speed;
         _movement.BackCorrection = _speedCorrection.y;
         _movement.SideCorrection = _speedCorrection.x;
-        _movement.TurnSpeed = _turnSpeed;
         _onMoveFuncs.Add(_movement.Move);
         MountsInit();
     }
@@ -166,14 +168,17 @@ public class RobotBase : MonoBehaviour, IWepon
         _onMoveFuncs.ForEach(a => a.Invoke(velocity));
     }
 
-    public void OnTurn(float turn)
+    public void OnTurn(Vector3 turn)
     {
         _onTurnFuncs.ForEach(a => a.Invoke(turn));
     }
 
-    public void OnTargeting(Vector3 angle, TargetingMode targetingMode)
+    public void OnTargeting(TargetingData data)
     {
-        _onTargetingActions.ForEach(a => a.Invoke(angle, targetingMode));
+        float y = Mathf.Atan2(data.Forward.x, data.Forward.z) * Mathf.Rad2Deg;
+        //transform.eulerAngles = new Vector3(0, y, 0);
+        _onTurnFuncs.ForEach(f => f.Invoke(data.Forward));
+        _onTargetingActions.ForEach(a => a?.Invoke(data));
     }
 
     #endregion =====================================================

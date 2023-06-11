@@ -7,10 +7,9 @@ using System.Linq;
 /// <summary>
 /// ÉvÉåÉCÉÑÅ[ëÄçÏÇÃê›íËÇÇ∑ÇÈ
 /// </summary>
-[RequireComponent(typeof(PlayerInput), typeof(PlayerRobotCamera))]
+[RequireComponent(typeof(PlayerInput), typeof(PlayerRobotCamera), typeof(RobotBase))]
 public class PlayerInputSetting : MonoBehaviour
 {
-    [SerializeField, Tooltip("")]
     RobotBase _robotBase;
 
 
@@ -23,46 +22,45 @@ public class PlayerInputSetting : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
         _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
         _robotCamera = GetComponent<PlayerRobotCamera>();
+        _robotBase = GetComponent<RobotBase>();
     }
 
     private void Start()
     {
-        if (_robotBase)
-        {
-            _playerInput.actionEvents.Where(a => a.actionName.Contains("Fire")).FirstOrDefault()?
-                .AddListener(callback =>
+        _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Fire")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                var phase = Input2Wepon(callback.phase);
+                if (phase != null)
                 {
-                    var phase = Input2Wepon(callback.phase);
-                    if (phase != null)
-                    {
-                        _robotBase.OnFire(phase.Value);
-                    }
-                });
-            _playerInput.actionEvents.Where(a => a.actionName.Contains("Aim")).FirstOrDefault()?
-                .AddListener(callback =>
+                    _robotBase.OnFire(phase.Value);
+                }
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Aim")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                var phase = Input2Wepon(callback.phase);
+                if (phase != null)
                 {
-                    var phase = Input2Wepon(callback.phase);
-                    if (phase != null)
-                    {
-                        _robotBase.OnAim(phase.Value);
-                    }
-                });
-            _playerInput.actionEvents.Where(a => a.actionName.Contains("Reload")).FirstOrDefault()?
-                .AddListener(callback =>
+                    _robotBase.OnAim(phase.Value);
+                }
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Reload")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                var phase = Input2Wepon(callback.phase);
+                if (phase != null)
                 {
-                    var phase = Input2Wepon(callback.phase);
-                    if (phase != null)
-                    {
-                        _robotBase.OnReload(phase.Value);
-                    }
-                });
-            _playerInput.actionEvents.Where(a => a.actionName.Contains("Move")).FirstOrDefault()?
-                .AddListener(callback =>
-                {
-                    _robotBase.OnMove(callback.ReadValue<Vector2>());
-                });
-            _robotCamera.OnTargetSets.Add(_robotBase.OnTargeting);
-        }
+                    _robotBase.OnReload(phase.Value);
+                }
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Move")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                _robotBase.OnMove(callback.ReadValue<Vector2>());
+            });
+        _robotCamera.OnTargetSets.Add(_robotBase.OnTargeting);
     }
 
 

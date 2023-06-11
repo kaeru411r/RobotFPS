@@ -30,6 +30,6 @@ public interface IWepon
     /// </summary>
     /// <param name="target"></param>
     /// <param name="targetingMode"></param>
-    public void OnTargeting(Vector3 target, TargetingMode targetingMode);
+    public void OnTargeting(TargetingData data);
 }
 

@@ -82,14 +82,13 @@ public class Gun : WeponBase
         base.Attach(robot);
         _rb = robot.GetComponent<Rigidbody>();
     }
-    public override void OnTargeting(Vector3 target, TargetingMode targetingMode)
+    public override void OnTargeting(TargetingData data)
     {
-        if (targetingMode == TargetingMode.Position)
+        if (data.TargetingMode == TargetingMode.Position)
         {
-            target = (target - transform.position).normalized;
+            data.Target = (data.Target - transform.position).normalized;
         }
-        Debug.DrawRay(transform.position, target * 10);
-        transform.rotation = Quaternion.LookRotation(target, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(data.Target, Vector3.up);
     }
 
     private void Start()

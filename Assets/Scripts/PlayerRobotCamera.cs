@@ -11,9 +11,9 @@ public class PlayerRobotCamera : MonoBehaviour
 
 
     CinemachineBrain _brain;
-    List<Action<Vector3, TargetingMode>> _onTargetSets = new List<Action<Vector3, TargetingMode>>();
+    List<Action<TargetingData>> _onTargetSets = new List<Action<TargetingData>>();
 
-    public List<Action<Vector3, TargetingMode>> OnTargetSets { get => _onTargetSets;}
+    public List<Action<TargetingData>> OnTargetSets { get => _onTargetSets;}
 
     private void Start()
     {
@@ -35,11 +35,11 @@ public class PlayerRobotCamera : MonoBehaviour
                 var ray = Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f));
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    _onTargetSets.ForEach(a => a?.Invoke(hit.point, TargetingMode.Position));
+                    _onTargetSets.ForEach(a => a?.Invoke(new TargetingData(Camera.main.transform.forward, hit.point)));
                 }
                 else
                 {
-                    _onTargetSets.ForEach(a => a?.Invoke(_virtualCamera.transform.forward, TargetingMode.Angle));
+                    _onTargetSets.ForEach(a => a?.Invoke(new TargetingData(Camera.main.transform.forward)));
                 }
             }
             yield return null;

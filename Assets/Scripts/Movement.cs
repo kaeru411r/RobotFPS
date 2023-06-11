@@ -10,8 +10,6 @@ public class Movement : MonoBehaviour
 {
     [SerializeField, Tooltip("基本歩行速度")]
     float _speed;
-    [SerializeField, Tooltip("旋回速度")]
-    float _turnSpeed;
     [SerializeField, Tooltip("左右速度補正")]
     float _sideCorrection;
     [SerializeField, Tooltip("後方速度補正")]
@@ -19,10 +17,8 @@ public class Movement : MonoBehaviour
 
     Rigidbody _rb;
     Vector3 _velocity;
-    float _turn;
 
     public float Speed { get => _speed; set => _speed = value; }
-    public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
     public float SideCorrection { get => _sideCorrection; set => _sideCorrection = value; }
     public float BackCorrection { get => _backCorrection; set => _backCorrection = value; }
 
@@ -49,26 +45,32 @@ public class Movement : MonoBehaviour
         _velocity = new Vector3(x, 0, y);
     }
 
-    public void Turn(float turn)
-    {
-        if(turn < -1)
-        {
-            turn = -1;
-        }
-        else if(turn > 1)
-        {
-            turn = 1;
-        }
-
-        _turn = turn;
-    }
 
     IEnumerator MoveCycle()
     {
         while (true)
         {
-            _rb.AddForce(_velocity);
-            _rb.MoveRotation(Quaternion.AngleAxis(_turn, _rb.transform.up));
+            //_rb.MoveRotation(Quaternion.AngleAxis(_turn, _rb.transform.up));
+            if (_velocity.magnitude > 0)
+            {
+                Vector3 forword = transform.forward;
+                Vector3 right = transform.right;
+                Vector3 up = transform.up;
+                Vector3 velocity = right * _velocity.x + up * _velocity.y + forword * _velocity.z;
+                var dot = Vector3.Dot(velocity, _rb.velocity / velocity.magnitude);
+                dot = Mathf.Clamp(dot, 0, 1);
+                Vector3 force = velocity.normalized * (1 - dot);
+                _rb.AddForce(force, ForceMode.Acceleration);
+                if (name == "Robot" && force.magnitude != 0)
+                {
+                    Debug.Log($"{_velocity}, {_rb.velocity}, {force}, {velocity}, {dot}");
+                }
+                Debug.DrawRay(transform.position, _velocity, Color.red);
+                Debug.DrawRay(transform.position, velocity, Color.blue);
+                Debug.DrawRay(transform.position, _rb.velocity, Color.yellow);
+                Debug.DrawRay(transform.position, force, Color.green);
+                Debug.DrawRay(transform.position, forword, Color.white);
+            }
             yield return new WaitForFixedUpdate();
         }
     }
