@@ -57,13 +57,13 @@ public class Movement : MonoBehaviour
                 Vector3 right = transform.right;
                 Vector3 up = transform.up;
                 Vector3 velocity = right * _velocity.x + up * _velocity.y + forword * _velocity.z;
-                var dot = Vector3.Dot(velocity, _rb.velocity / velocity.magnitude);
+                var dot = Vector3.Dot(velocity.normalized, _rb.velocity / velocity.magnitude);
                 dot = Mathf.Clamp(dot, 0, 1);
-                Vector3 force = velocity.normalized * (1 - dot);
+                Vector3 force = velocity * (1f - dot * dot);
                 _rb.AddForce(force, ForceMode.Acceleration);
                 if (name == "Robot" && force.magnitude != 0)
                 {
-                    Debug.Log($"{_velocity}, {_rb.velocity}, {force}, {velocity}, {dot}");
+                    Debug.Log($"{_rb.velocity.magnitude}, {velocity.normalized.magnitude}, {(_rb.velocity / velocity.magnitude).magnitude}, {Vector3.Dot(velocity.normalized, _rb.velocity / velocity.magnitude)}");
                 }
                 Debug.DrawRay(transform.position, _velocity, Color.red);
                 Debug.DrawRay(transform.position, velocity, Color.blue);
