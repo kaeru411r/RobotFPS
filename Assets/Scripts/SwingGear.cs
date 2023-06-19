@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using UnityEditor.Hardware;
 using UnityEngine;
 
 public class SwingGear : UnitBase
@@ -15,27 +14,12 @@ public class SwingGear : UnitBase
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
 
 
-    public override void Attach(RobotBase robot)
+    protected override void OnAttach()
     {
-        _rb = robot.GetComponent<Rigidbody>();
-        robot.OnTurnFuncs.Add(SetDirection);
-        _turnSpeed = robot.TurnSpeed;
+        _rb = _robot.GetComponent<Rigidbody>();
+        _robot.OnTurnFuncs.Add(SetDirection);
+        _turnSpeed = _robot.TurnSpeed;
         StartCoroutine(Turn());
-    }
-
-    public override void Detach()
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public override void Pause()
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public override void Resume()
-    {
-        
     }
 
 
@@ -52,9 +36,9 @@ public class SwingGear : UnitBase
     {
         while (true)
         {
-            Vector3 cross = Vector3.Cross(Vector3.up, _direction);
-            Vector3 dir = Vector3.Cross(cross, transform.up).normalized;
-            float angle = Vector3.Angle(transform.forward, dir);
+            var cross = Vector3.Cross(Vector3.up, _direction);
+            var dir = Vector3.Cross(cross, transform.up).normalized;
+            var angle = Vector3.Angle(transform.forward, dir);
             angle = Mathf.Min(angle, _turnSpeed * Time.fixedDeltaTime) * (Vector3.Dot(transform.right, dir) < 0 ? -1 : 1);
             transform.Rotate(transform.up, angle);
             yield return new WaitForFixedUpdate();

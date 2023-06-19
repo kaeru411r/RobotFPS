@@ -10,26 +10,15 @@ public class DamageFactor : UnitBase
     [SerializeField, Tooltip("É_ÉÅÅ[ÉWî{ó¶")]
     float _damageFactor;
 
-    RobotBase _robot;
-    public override void Attach(RobotBase robot)
+    protected override void OnAttach()
     {
-        _robot = robot;
-        robot.OnDamageFuncs.Add(Factor);
+        _robot.OnDamageFuncs.Add(Factor);
     }
 
-    public override void Detach()
+    protected override void OnDetach()
     {
         _robot?.OnDamageFuncs.Remove(Factor);
     }
-
-    public override void Pause()
-    {
-    }
-
-    public override void Resume()
-    {
-    }
-
     public float Factor(float baseDamage)
     {
         return baseDamage * _damageFactor;

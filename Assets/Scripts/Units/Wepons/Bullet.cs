@@ -40,6 +40,7 @@ public class Bullet : MonoBehaviour
         _atk = atk;
         _speed = speed;
         _rb.velocity = transform.forward * speed;
+        _rb.useGravity = false;
         _isFire = true;
         Destroy(gameObject, lifeTime);
     }

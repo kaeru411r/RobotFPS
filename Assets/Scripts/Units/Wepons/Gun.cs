@@ -22,21 +22,23 @@ public class Gun : WeponBase
 
     bool _isFirering = false;
     bool _isReloading = false;
-    bool _isAiming = false;
+    //bool _isAiming = false;
     bool _isPause = false;
     float _fireTime = 0;
     Rigidbody _rb;
 
     public FireMode Firetype { get => _fireMode; set => _fireMode = value; }
+    public float FireRate { get => _fireRate;}
 
-
-    public override void Pause()
+    protected override void OnPause()
     {
         _isPause = true;
+        base.OnPause();
     }
 
-    public override void Resume()
+    protected override void OnResume()
     {
+        base.OnResume();
         _isPause = false;
     }
 
@@ -45,12 +47,12 @@ public class Gun : WeponBase
         if (_isPause) { return; }
         if (phase == WeponActionPhase.Started)
         {
-            _isAiming = true;
+            //_isAiming = true;
             Debug.Log("Aiming");
         }
         else if (phase == WeponActionPhase.Canceled)
         {
-            _isAiming = false;
+            //_isAiming = false;
             Debug.Log("Aimed");
         }
     }
@@ -77,10 +79,10 @@ public class Gun : WeponBase
         }
     }
 
-    public override void Attach(RobotBase robot)
+    protected override void OnAttach()
     {
-        base.Attach(robot);
-        _rb = robot.GetComponent<Rigidbody>();
+        base.OnAttach();
+        _rb = _robot.GetComponent<Rigidbody>();
     }
     public override void OnTargeting(TargetingData data)
     {
@@ -109,7 +111,7 @@ public class Gun : WeponBase
             {
                 if (_isFirering)
                 {
-                    _fireTime = 1 / (_fireRate / 60);
+                    _fireTime = 1 / (_fireRate * _robot.FireRateFactor / 60);
                     if (_fireMode == FireMode.SemiAuto)
                     {
                         _isFirering = false;
@@ -130,7 +132,7 @@ public class Gun : WeponBase
         if (_isReloading) { yield break; }
         Debug.Log("Reloading");
         _isReloading = true;
-        float time = _reloadTime;
+        var time = _reloadTime;
         while (true)
         {
             yield return null;

@@ -7,35 +7,36 @@ using UnityEngine;
 /// </summary>
 public abstract class WeponBase : UnitBase, IWepon
 {
-    RobotBase _robot;
 
-    public override void Attach(RobotBase robot)
+    protected override void OnAttach()
     {
-        _robot = robot;
-        robot.AddWepon(this);
+        _robot.AddWepon(this);
     }
-    public override void Detach()
+    protected override void OnDetach()
     {
         _robot?.RemoveWepon(this);
     }
+
     public abstract void OnFire(WeponActionPhase phase);
     public abstract void OnAim(WeponActionPhase phase);
     public abstract void OnReload(WeponActionPhase phase);
     public abstract void OnTargeting(TargetingData data);
 
-
+#if UNITY_EDITOR
     //---------------テスト用--------------------
-    public  void Fire(int phase)
+    public void Fire(int phase)
     {
         OnFire((WeponActionPhase)phase);
     }
-    public  void Aim(int phase)
+    public void Aim(int phase)
     {
         OnAim((WeponActionPhase)phase);
     }
-    public  void Reload(int phase)
+    public void Reload(int phase)
     {
         OnReload((WeponActionPhase)phase);
     }
+
     //--------------------------------------------
+#endif
 }

@@ -23,10 +23,11 @@ public class RobotBase : MonoBehaviour, IWepon
     [SerializeField, Tooltip("ê˘âÒë¨ìx")]
     float _turnSpeed;
 
-    List<WeponBase> _wepons = new List<WeponBase>();
+    List<IWepon> _wepons = new List<IWepon>();
     int _weponNumber = 0;
     HitPoint _hp;
     Movement _movement;
+    float _fireRateFactor = 1f;
     List<Func<float, float>> _onDamageFuncs = new List<Func<float, float>>();
     List<Action<WeponActionPhase>> _onFireActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
@@ -36,7 +37,7 @@ public class RobotBase : MonoBehaviour, IWepon
     List<Action<Vector3>> _onTurnFuncs = new List<Action<Vector3>>();
     List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
 
-    public WeponBase Wepon
+    public IWepon Wepon
     {
         get
         {
@@ -64,14 +65,14 @@ public class RobotBase : MonoBehaviour, IWepon
         {
             if (_wepons.Count > 0 && _wepons.Count > value)
             {
-                if (Wepon)
+                if (Wepon != null)
                 {
                     _onFireActions.Remove(Wepon.OnFire);
                     _onAimActions.Remove(Wepon.OnAim);
                     _onReloadActions.Remove(Wepon.OnReload);
                 }
                 _weponNumber = value;
-                if (Wepon)
+                if (Wepon != null)
                 {
                     _onFireActions.Add(Wepon.OnFire);
                     _onAimActions.Add(Wepon.OnAim);
@@ -90,6 +91,7 @@ public class RobotBase : MonoBehaviour, IWepon
     public List<Action<Vector2>> OnMoveFuncs { get => _onMoveFuncs;}
     public List<Action<Vector3>> OnTurnFuncs { get => _onTurnFuncs;}
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
+    public float FireRateFactor { get => _fireRateFactor; set => _fireRateFactor = value; }
 
     private void Awake()
     {
@@ -112,7 +114,7 @@ public class RobotBase : MonoBehaviour, IWepon
 
     /// <summary>ïêëïìoò^</summary>
     /// <param name="wepon"></param>
-    public void AddWepon(WeponBase wepon)
+    public void AddWepon(IWepon wepon)
     {
         _wepons.Add(wepon);
         _onTargetingActions.Add(wepon.OnTargeting);
@@ -124,7 +126,7 @@ public class RobotBase : MonoBehaviour, IWepon
 
     /// <summary>ïêëïçÌèú</summary>
     /// <param name="wepon"></param>
-    public void RemoveWepon(WeponBase wepon)
+    public void RemoveWepon(IWepon wepon)
     {
         _wepons.Remove(wepon);
         _onTargetingActions.Remove(wepon.OnTargeting);
