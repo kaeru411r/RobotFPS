@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 
 /// <summary>
@@ -10,7 +11,7 @@ using UnityEngine.InputSystem;
 /// 基本的に機体のほとんどのやり取りをこのクラスを介して行う
 /// </summary>
 [RequireComponent(typeof(HitPoint), typeof(Movement))]
-public class RobotBase : MonoBehaviour, IWepon
+public class RobotBase : MonoBehaviour, IWepon, IPause
 {
     [SerializeField, Tooltip("マウント")]
     Mount[] _mounts = new Mount[0];
@@ -36,6 +37,7 @@ public class RobotBase : MonoBehaviour, IWepon
     List<Action<TargetingData>> _onTargetingActions = new List<Action<TargetingData>>();
     List<Action<Vector3>> _onTurnFuncs = new List<Action<Vector3>>();
     List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
+    bool _isPause = false;
 
     public IWepon Wepon
     {
@@ -93,14 +95,10 @@ public class RobotBase : MonoBehaviour, IWepon
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
     public float FireRateFactor { get => _fireRateFactor; set => _fireRateFactor = value; }
 
-    private void Awake()
-    {
-        Init();
-    }
-
 
     public void Init()
     {
+        GameManager.Instance.Pauses.Add(this);
         _hp = GetComponent<HitPoint>();
         _hp.HPReset(HpReset(_maxHp));
         _hp.OnDownAction += Down;
@@ -152,38 +150,65 @@ public class RobotBase : MonoBehaviour, IWepon
 
     public void OnFire(WeponActionPhase phase)
     {
+        if(_isPause) { return; }
         _onFireActions.ForEach(a => a.Invoke(phase));
     }
 
     public void OnAim(WeponActionPhase phase)
     {
+        if (_isPause) { return; }
         _onAimActions.ForEach(a => a.Invoke(phase));
     }
 
     public void OnReload(WeponActionPhase phase)
     {
+        if (_isPause) { return; }
         _onReloadActions.ForEach(a => a.Invoke(phase));
     }
 
     public void OnMove(Vector2 velocity)
     {
+        if (_isPause) { return; }
         _onMoveFuncs.ForEach(a => a.Invoke(velocity));
     }
 
     public void OnTurn(Vector3 turn)
     {
+        if (_isPause) { return; }
         _onTurnFuncs.ForEach(a => a.Invoke(turn));
     }
 
     public void OnTargeting(TargetingData data)
     {
+        if (_isPause) { return; }
         float y = Mathf.Atan2(data.Forward.x, data.Forward.z) * Mathf.Rad2Deg;
         //transform.eulerAngles = new Vector3(0, y, 0);
         _onTurnFuncs.ForEach(f => f.Invoke(data.Forward));
         _onTargetingActions.ForEach(a => a?.Invoke(data));
     }
 
+    public void Pause()
+    {
+        _isPause = true;
+        Array.ForEach(Mounts, m => m.Pause());
+    }
+
+    public void Resume()
+    {
+        Array.ForEach(Mounts, m => m.Resume());
+        _isPause = false;
+    }
     #endregion =====================================================
+
+    private void Awake()
+    {
+        Init();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.Pauses.Remove(this);
+    }
 
     public AttackResult OnDamage(int damage)
     {
@@ -207,4 +232,5 @@ public class RobotBase : MonoBehaviour, IWepon
     {
         Debug.Log("Down");
     }
+
 }

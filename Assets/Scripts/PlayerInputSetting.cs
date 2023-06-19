@@ -10,6 +10,9 @@ using System.Linq;
 [RequireComponent(typeof(PlayerInput), typeof(PlayerRobotCamera), typeof(RobotBase))]
 public class PlayerInputSetting : MonoBehaviour
 {
+    [SerializeField]
+    UnitMenu _menu;
+
     RobotBase _robotBase;
 
 
@@ -61,6 +64,18 @@ public class PlayerInputSetting : MonoBehaviour
                 _robotBase.OnMove(callback.ReadValue<Vector2>());
             });
         _robotCamera.OnTargetSets.Add(_robotBase.OnTargeting);
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Menu")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                if(callback.phase == InputActionPhase.Started)
+                {
+                    GameManager.Instance.Pause();
+                    if (_menu)
+                    {
+                        _menu.Action();
+                    }
+                }
+            });
     }
 
 

@@ -36,6 +36,10 @@ public class SwingGear : UnitBase
     {
         while (true)
         {
+            while (_isPause)
+            {
+                yield return null;
+            }
             var cross = Vector3.Cross(Vector3.up, _direction);
             var dir = Vector3.Cross(cross, transform.up).normalized;
             var angle = Vector3.Angle(transform.forward, dir);

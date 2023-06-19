@@ -5,8 +5,10 @@ using UnityEngine;
 
 /// <summary>装備をロボットに装着する</summary>
 [System.Serializable]
-public class Mount
+public class Mount : IPause
 {
+    [SerializeField, Tooltip("名前")]
+    string _name;
     [SerializeField, Tooltip("ユニット")]
     UnitBase _unit = null;
     [SerializeField, Tooltip("装備できるユニットと、その接続パーツのリスト")]
@@ -36,6 +38,21 @@ public class Mount
 
     /// <summary>初期化が済んでいるか</summary>
     public bool IsInitialized { get => _isInitialized; }
+    public UnitBase Unit
+    {
+        get => _unit;
+        set
+        {
+            if(_unit == value) { return; }
+            _unit.Detach();
+            _unit.gameObject.SetActive(false);
+            _unit = value;
+            _unit.gameObject.SetActive(true);
+            _unit.Attach(_robot);
+        }
+    }
+    public string Name { get => _name; set => _name = value; }
+    public UnitBase[] SupportedUnits { get => _supportedUnits; set => _supportedUnits = value; }
 
 
     /// <summary>
@@ -48,6 +65,16 @@ public class Mount
         _robot = robot;
         _isInitialized = true;
         UnitSet();
+    }
+
+    public void Pause()
+    {
+        _unit.Pause();
+    }
+
+    public void Resume()
+    {
+        _unit.Resume();
     }
 
     void UnitSet()
