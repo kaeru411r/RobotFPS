@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.CinemachineFreeLook;
 
 public class FireRate : UnitBase
 {
@@ -20,7 +19,7 @@ public class FireRate : UnitBase
 
     protected override void OnPause()
     {
-        if (_isAttached)
+        if (_isAttach)
         {
             _robot.FireRateFactor /= _rateFactor;
         }
@@ -28,7 +27,7 @@ public class FireRate : UnitBase
 
     protected override void OnResume()
     {
-        if (_isAttached)
+        if (_isAttach)
         {
             _robot.FireRateFactor *= _rateFactor;
         }

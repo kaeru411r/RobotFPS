@@ -5,10 +5,11 @@ using UnityEngine;
 /// <summary>
 /// ユニットのベースクラス
 /// </summary>
-public abstract class UnitBase : MonoBehaviour
+public abstract class UnitBase : MonoBehaviour, IPause
 {
-    protected bool _isAttached { get; private set; } = false;
+    protected bool _isAttach { get; private set; } = false;
     protected RobotBase _robot { get; private set; } = null;
+    protected bool _isPause { get; private set; } = false;
 
     /// <summary>
     /// 機体にユニットを装備する
@@ -16,7 +17,7 @@ public abstract class UnitBase : MonoBehaviour
     /// <param name="robot"></param>
     public void Attach(RobotBase robot)
     {
-        _isAttached = true;
+        _isAttach = true;
         _robot = robot;
         OnAttach();
     }
@@ -25,8 +26,22 @@ public abstract class UnitBase : MonoBehaviour
     public void Detach()
     {
         OnDetach();
-        _isAttached = false;
+        _isAttach = false;
         _robot = null;
+    }
+
+    public void Pause()
+    {
+        if (_isPause) return;
+        _isPause = true;
+        OnPause();
+    }
+
+    public void Resume()
+    {
+        if (!_isPause) return;
+        _isPause = false;
+        OnResume();
     }
 
     protected virtual void OnAttach() { }
@@ -37,11 +52,11 @@ public abstract class UnitBase : MonoBehaviour
 
     private void OnEnable()
     {
-        OnResume();
+        Resume();
     }
     private void OnDisable()
     {
-        OnPause();
+        Pause();
     }
     private void OnDestroy()
     {

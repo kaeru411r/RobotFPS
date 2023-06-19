@@ -23,24 +23,11 @@ public class Gun : WeponBase
     bool _isFirering = false;
     bool _isReloading = false;
     //bool _isAiming = false;
-    bool _isPause = false;
     float _fireTime = 0;
     Rigidbody _rb;
 
     public FireMode Firetype { get => _fireMode; set => _fireMode = value; }
     public float FireRate { get => _fireRate;}
-
-    protected override void OnPause()
-    {
-        _isPause = true;
-        base.OnPause();
-    }
-
-    protected override void OnResume()
-    {
-        base.OnResume();
-        _isPause = false;
-    }
 
     public override void OnAim(WeponActionPhase phase)
     {
