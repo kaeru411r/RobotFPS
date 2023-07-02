@@ -1,5 +1,5 @@
 {
-    "name": "New Controls",
+    "name": "ControlMap",
     "maps": [
         {
             "name": "Play",
@@ -58,6 +58,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "a2e32453-ebee-4ea2-924b-3a6a13320056",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Chenge",
+                    "type": "Value",
+                    "id": "e2a3dcb8-1026-4488-ad86-f7daf3f22122",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -278,6 +296,50 @@
                     "processors": "",
                     "groups": "GamePad",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a0c14a1d-b8ef-4d0f-bfa7-b91851461ae0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e50bad0a-9b0b-4edb-955c-1de235d477d5",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9fd7d31c-1b74-4b30-b7e3-f7e127aab673",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Chenge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6fddf40f-f937-40d2-9196-c8b75d9c6f21",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "Chenge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

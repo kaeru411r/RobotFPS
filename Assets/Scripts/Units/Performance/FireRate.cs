@@ -9,19 +9,19 @@ public class FireRate : UnitBase
 
     protected override void OnAttach()
     {
-        _robot.FireRateFactor *= _rateFactor;
+        _robot.Performance.RateFactor *= _rateFactor;
     }
 
     protected override void OnDetach()
     {
-        _robot.FireRateFactor /= _rateFactor;
+        _robot.Performance.RateFactor /= _rateFactor;
     }
 
     protected override void OnPause()
     {
         if (_isAttach)
         {
-            _robot.FireRateFactor /= _rateFactor;
+            _robot.Performance.RateFactor /= _rateFactor;
         }
     }
 
@@ -29,7 +29,7 @@ public class FireRate : UnitBase
     {
         if (_isAttach)
         {
-            _robot.FireRateFactor *= _rateFactor;
+            _robot.Performance.RateFactor *= _rateFactor;
         }
     }
 

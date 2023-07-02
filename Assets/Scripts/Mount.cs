@@ -9,15 +9,16 @@ public class Mount : IPause
 {
     [SerializeField, Tooltip("名前")]
     string _name;
-    [SerializeField, Tooltip("ユニット")]
-    UnitBase _unit = null;
     [SerializeField, Tooltip("装備できるユニットと、その接続パーツのリスト")]
     UnitBase[] _supportedUnits;
 
+    [SerializeField, HideInInspector]
+    bool _isInitialized = false;
+
     RobotBase _robot = null;
     GameObject _mountBase = null;
-
-    bool _isInitialized = false;
+    [SerializeField, HideInInspector]
+    UnitBase _unit;
 
 
     /// <summary>ユニット基部</summary>
@@ -43,12 +44,25 @@ public class Mount : IPause
         get => _unit;
         set
         {
-            if(_unit == value) { return; }
-            _unit.Detach();
-            _unit.gameObject.SetActive(false);
+            if (_isInitialized)
+            {
+                if (_unit == value) { return; }
+                _unit?.Detach();
+                _unit?.gameObject.SetActive(false);
+                if (value.gameObject.scene.buildIndex == -1)
+                {
+                    var go = GameObject.Instantiate(value);
+                    go.name = value.name;
+                    value = go;
+                }
+            }
+            Debug.Log(value);
             _unit = value;
-            _unit.gameObject.SetActive(true);
-            _unit.Attach(_robot);
+            if (_isInitialized)
+            {
+                _unit.gameObject.SetActive(true);
+                _unit.Attach(Robot, this);
+            }
         }
     }
     public string Name { get => _name; set => _name = value; }
@@ -81,8 +95,7 @@ public class Mount : IPause
     {
         if (Robot != null && _unit != null)
         {
-            _unit.Attach(Robot);
+            _unit.Attach(Robot, this);
         }
     }
-
 }

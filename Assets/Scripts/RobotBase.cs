@@ -23,12 +23,13 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     Vector2 _speedCorrection;
     [SerializeField, Tooltip("ê˘âÒë¨ìx")]
     float _turnSpeed;
+    [SerializeField, Tooltip("ê´î\íl")]
+    Performance _performance = new Performance();
 
     List<IWepon> _wepons = new List<IWepon>();
     int _weponNumber = 0;
     HitPoint _hp;
     Movement _movement;
-    float _fireRateFactor = 1f;
     List<Func<float, float>> _onDamageFuncs = new List<Func<float, float>>();
     List<Action<WeponActionPhase>> _onFireActions = new List<Action<WeponActionPhase>>();
     List<Action<WeponActionPhase>> _onAimActions = new List<Action<WeponActionPhase>>();
@@ -37,6 +38,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     List<Action<TargetingData>> _onTargetingActions = new List<Action<TargetingData>>();
     List<Action<Vector3>> _onTurnFuncs = new List<Action<Vector3>>();
     List<Func<int, int>> _onHpResetFuncs = new List<Func<int, int>>();
+    List<Action> _onDown = new List<Action>();
     bool _isPause = false;
 
     public IWepon Wepon
@@ -65,21 +67,28 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         get => _weponNumber;
         set
         {
-            if (_wepons.Count > 0 && _wepons.Count > value)
+            if (value < 0)
             {
-                if (Wepon != null)
-                {
-                    _onFireActions.Remove(Wepon.OnFire);
-                    _onAimActions.Remove(Wepon.OnAim);
-                    _onReloadActions.Remove(Wepon.OnReload);
-                }
-                _weponNumber = value;
-                if (Wepon != null)
-                {
-                    _onFireActions.Add(Wepon.OnFire);
-                    _onAimActions.Add(Wepon.OnAim);
-                    _onReloadActions.Add(Wepon.OnReload);
-                }
+                value = Mathf.Max(0, _wepons.Count - 1);
+                //Debug.Log(value);
+            }
+            else if (value >= _wepons.Count)
+            {
+                value = 0;
+                //Debug.Log(value);
+            }
+            if (Wepon != null)
+            {
+                _onFireActions.Remove(Wepon.OnFire);
+                _onAimActions.Remove(Wepon.OnAim);
+                _onReloadActions.Remove(Wepon.OnReload);
+            }
+            _weponNumber = value;
+            if (Wepon != null)
+            {
+                _onFireActions.Add(Wepon.OnFire);
+                _onAimActions.Add(Wepon.OnAim);
+                _onReloadActions.Add(Wepon.OnReload);
             }
         }
     }
@@ -90,11 +99,11 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     public List<Action<WeponActionPhase>> OnReloadActions { get => _onReloadActions; }
     public List<Func<int, int>> OnHpResetFuncs { get => _onHpResetFuncs; }
     public List<Action<TargetingData>> OnTargetingActions { get => _onTargetingActions; }
-    public List<Action<Vector2>> OnMoveFuncs { get => _onMoveFuncs;}
-    public List<Action<Vector3>> OnTurnFuncs { get => _onTurnFuncs;}
+    public List<Action<Vector2>> OnMoveFuncs { get => _onMoveFuncs; }
+    public List<Action<Vector3>> OnTurnFuncs { get => _onTurnFuncs; }
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
-    public float FireRateFactor { get => _fireRateFactor; set => _fireRateFactor = value; }
-
+    public Performance Performance { get => _performance; set => _performance = value; }
+    public List<Action> OnDown { get => _onDown; set => _onDown = value; }
 
     public void Init()
     {
@@ -108,6 +117,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         _movement.SideCorrection = _speedCorrection.x;
         _onMoveFuncs.Add(_movement.Move);
         MountsInit();
+        return;
     }
 
     /// <summary>ïêëïìoò^</summary>
@@ -120,6 +130,10 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         {
             WeponNumber = 0;
         }
+        else
+        {
+            WeponNumber = WeponNumber;
+        }
     }
 
     /// <summary>ïêëïçÌèú</summary>
@@ -131,6 +145,10 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         if (WeponNumber >= _wepons.Count)
         {
             WeponNumber = _wepons.Count - 1;
+        }
+        else
+        {
+            WeponNumber = WeponNumber;
         }
     }
     void MountsInit()
@@ -150,7 +168,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
 
     public void OnFire(WeponActionPhase phase)
     {
-        if(_isPause) { return; }
+        if (_isPause) { return; }
         _onFireActions.ForEach(a => a.Invoke(phase));
     }
 
@@ -210,6 +228,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         GameManager.Instance.Pauses.Remove(this);
     }
 
+
     public AttackResult OnDamage(int damage)
     {
         float buf = damage;
@@ -231,6 +250,8 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     void Down()
     {
         Debug.Log("Down");
+        _onDown.ForEach(e => e.Invoke());
+        Destroy(gameObject);
     }
 
 }

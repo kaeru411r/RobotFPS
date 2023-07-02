@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ƒvƒŒƒCƒ„[‘€ì‚ÌÝ’è‚ð‚·‚é
@@ -67,7 +68,7 @@ public class PlayerInputSetting : MonoBehaviour
         _playerInput.actionEvents.Where(a => a.actionName.Contains("Menu")).FirstOrDefault()?
             .AddListener(callback =>
             {
-                if(callback.phase == InputActionPhase.Started)
+                if (callback.started)
                 {
                     GameManager.Instance.Pause();
                     if (_menu)
@@ -75,6 +76,27 @@ public class PlayerInputSetting : MonoBehaviour
                         _menu.Action();
                     }
                 }
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Restart")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Chenge")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                var value = callback.ReadValue<float>();
+                var i = 1 * (int)Mathf.Sign(value);
+                if (callback.started)
+                {
+                    _robotBase.WeponNumber += i;
+                }
+
+            });
+        _playerInput.actionEvents.Where(a => a.actionName.Contains("Look")).FirstOrDefault()?
+            .AddListener(callback =>
+            {
+                _robotCamera.Look(callback.ReadValue<Vector2>());
             });
     }
 

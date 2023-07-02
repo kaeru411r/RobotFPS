@@ -12,6 +12,13 @@ public class UnitMenu : MonoBehaviour
     Button[] _buttons;
     bool _isActive = false;
 
+    [SerializeField, Tooltip("ロボット")]
+    Canvas _canvas1;
+    [SerializeField, Tooltip("ロボット")]
+    Canvas _canvas2;
+    [SerializeField, Tooltip("ロボット")]
+    Canvas _canvas3;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,9 +29,11 @@ public class UnitMenu : MonoBehaviour
 
     public void Open()
     {
+        _canvas1?.gameObject.SetActive(false);
         gameObject.SetActive(true);
         for (int i = 0; i < _buttons.Length; i++)
         {
+            _canvas2?.gameObject.SetActive(true);
             if (i < _robot.Mounts.Length)
             {
                 _buttons[i].gameObject.SetActive(true);
@@ -45,6 +54,9 @@ public class UnitMenu : MonoBehaviour
 
     public void Close()
     {
+        _canvas1?.gameObject?.SetActive(true);
+        _canvas3?.gameObject?.SetActive(false);
+        _canvas2?.gameObject?.SetActive(false);
         foreach (Button button in _buttons)
         {
             button.GetComponentInChildren<Text>().text = "";
@@ -68,6 +80,8 @@ public class UnitMenu : MonoBehaviour
 
     public void MountOpen(int index)
     {
+        _canvas2?.gameObject.SetActive(false);
+        _canvas3?.gameObject.SetActive(true);
         for (int i = 0; i < Mathf.Min(_buttons.Length); i++)
         {
             if (i < _robot.Mounts[index].SupportedUnits.Length)
@@ -83,6 +97,7 @@ public class UnitMenu : MonoBehaviour
 
                 });
                 _buttons[i].GetComponentInChildren<Text>().text = _robot.Mounts[index].SupportedUnits[i].name;
+                _buttons[i].gameObject.IsDestroyed();
             }
             else
             {

@@ -98,7 +98,7 @@ public class Gun : WeponBase
             {
                 if (_isFirering)
                 {
-                    _fireTime = 1 / (_fireRate * _robot.FireRateFactor / 60);
+                    _fireTime = 1 / (_fireRate * _robot.Performance.RateFactor / 60);
                     if (_fireMode == FireMode.SemiAuto)
                     {
                         _isFirering = false;
@@ -143,8 +143,8 @@ public class Gun : WeponBase
             {
                 bullet.RigidBody.velocity = _rb.velocity;
             }
-            bullet.Fire(_atk, _speed, 10);
-            Debug.Log("Fire");
+            bullet.Fire((int)(_atk * _robot.Performance.AtkFactor), _speed, 10);
+            //Debug.Log("Fire");
         }
     }
 

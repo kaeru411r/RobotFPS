@@ -6,7 +6,7 @@ using UnityEngine;
 /// ロボットを移動させるコンポーネント
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class Movement : MonoBehaviour
+public class Movement : UnitBase
 {
     [SerializeField, Tooltip("基本歩行速度")]
     float _speed;
@@ -68,15 +68,36 @@ public class Movement : MonoBehaviour
     {
         while (true)
         {
-            var force = -_rb.velocity;
+            if (_isPause)
+            {
+                yield return Sleeping();
+            }
+            var velocity = _rb.velocity;
+            velocity.y = 0;
+            var force = -velocity;
             if (_velocity.magnitude > 0)
             {
-                var velocity = transform.right * _velocity.x + transform.forward * _velocity.z;
-                var dot = Vector3.Dot(velocity.normalized, _rb.velocity / velocity.magnitude);
-                force -= -velocity * dot;
+                var moveVelocity = transform.right * _velocity.x + transform.forward * _velocity.z;
+                var dot = Vector3.Dot(moveVelocity.normalized, velocity / moveVelocity.magnitude);
+                force -= -moveVelocity * dot;
+                Debug.Log(force);
             }
             _rb.AddForce(force, ForceMode.VelocityChange);
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    IEnumerator Sleeping()
+    {
+        var buf = _rb.velocity;
+        _rb.Sleep();
+        _rb.isKinematic = true;
+        while (_isPause)
+        {
+            yield return null;
+        }
+        _rb.isKinematic = false;
+        _rb.WakeUp();
+        _rb.velocity = buf;
     }
 }
