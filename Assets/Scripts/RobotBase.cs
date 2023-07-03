@@ -10,10 +10,10 @@ using System.Linq;
 /// 機体の装備管理クラス
 /// 基本的に機体のほとんどのやり取りをこのクラスを介して行う
 /// </summary>
-[RequireComponent(typeof(HitPoint), typeof(Movement))]
+[RequireComponent(typeof(HitPoint))]
 public class RobotBase : MonoBehaviour, IWepon, IPause
 {
-    [SerializeField, Tooltip("マウント")]
+    [SerializeField, Tooltip("マウント"), HideInInspector]
     Mount[] _mounts = new Mount[0];
     [SerializeField, Tooltip("最大体力")]
     int _maxHp = 0;
@@ -106,11 +106,11 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         _hp = GetComponent<HitPoint>();
         _hp.HPReset(HpReset(_maxHp));
         _hp.OnDownAction += Down;
-        _movement = GetComponent<Movement>();
-        _movement.Speed = _speed;
-        _movement.BackCorrection = _speedCorrection.y;
-        _movement.SideCorrection = _speedCorrection.x;
-        _onMoveFuncs.Add(_movement.Move);
+        //_movement = GetComponent<Movement>();
+        //_movement.Speed = _speed;
+        //_movement.BackCorrection = _speedCorrection.y;
+        //_movement.SideCorrection = _speedCorrection.x;
+        //_onMoveFuncs.Add(_movement.Move);
         MountsInit();
         return;
     }

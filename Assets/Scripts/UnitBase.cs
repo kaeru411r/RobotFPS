@@ -6,12 +6,16 @@ using UnityEngine;
 /// <summary>
 /// ユニットのベースクラス
 /// </summary>
-public abstract class UnitBase : MonoBehaviour, IPause, IUnit
+public abstract class UnitBase : IPause, IUnit
 {
 
     protected bool _isAttach { get; private set; } = false;
     protected RobotBase _robot { get; private set; } = null;
     protected bool _isPause { get; private set; } = false;
+    protected GameObject _gameObject { get; private set; }
+    protected MonoBehaviour _mono {  get; private set; }
+
+    public MonoBehaviour Mono { get => _mono; }
 
     [SerializeField]
     Guid _id;
@@ -29,7 +33,7 @@ public abstract class UnitBase : MonoBehaviour, IPause, IUnit
         _isAttach = true;
         _robot = robot;
         _mount = mount;
-        Debug.Log($"アタッチ, {name}, {_mount.Name}");
+        Debug.Log($"アタッチ, {_mono.name}, {_mount.Name}");
         OnAttach();
     }
 
@@ -37,7 +41,7 @@ public abstract class UnitBase : MonoBehaviour, IPause, IUnit
     public void Detach()
     {
         OnDetach();
-        Debug.Log($"デタッチ, {name}, {_mount.Name}");
+        Debug.Log($"デタッチ, {_mono.name}, {_mount.Name}");
         _isAttach = false;
         _robot = null;
     }

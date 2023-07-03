@@ -17,20 +17,27 @@ public class Movement : UnitBase
 
     Rigidbody _rb;
     Vector3 _velocity = Vector3.zero;
+    Coroutine _moveCoroutine;
+    Coroutine _brakeCoroutine;
 
     public float Speed { get => _speed; set => _speed = value; }
     public float SideCorrection { get => _sideCorrection; set => _sideCorrection = value; }
     public float BackCorrection { get => _backCorrection; set => _backCorrection = value; }
 
-    private void Awake()
+
+    protected override void OnAttach()
     {
-        _rb = GetComponent<Rigidbody>();
+        base.OnAttach();
+        _rb = _mono.GetComponent<Rigidbody>();
+        _moveCoroutine = _mono.StartCoroutine(MoveCycle());
+        _brakeCoroutine = _mono.StartCoroutine(BrakeCycle());
     }
 
-    private void Start()
+    protected override void OnDetach()
     {
-        StartCoroutine(MoveCycle());
-        StartCoroutine(BrakeCycle());
+        _mono.StopCoroutine(_moveCoroutine);
+        _mono.StopCoroutine(_brakeCoroutine);
+        base.OnDetach();
     }
 
 
@@ -54,7 +61,7 @@ public class Movement : UnitBase
         {
             if (_velocity.magnitude > 0)
             {
-                var velocity = transform.right * _velocity.x + transform.forward * _velocity.z;
+                var velocity = _mono.transform.right * _velocity.x + _mono.transform.forward * _velocity.z;
                 var dot = Vector3.Dot(velocity.normalized, _rb.velocity / velocity.magnitude);
                 dot = Mathf.Clamp(dot, 0, 1);
                 var force = velocity * (1f - dot * dot);
@@ -77,7 +84,7 @@ public class Movement : UnitBase
             var force = -velocity;
             if (_velocity.magnitude > 0)
             {
-                var moveVelocity = transform.right * _velocity.x + transform.forward * _velocity.z;
+                var moveVelocity = _mono.transform.right * _velocity.x + _mono.transform.forward * _velocity.z;
                 var dot = Vector3.Dot(moveVelocity.normalized, velocity / moveVelocity.magnitude);
                 force -= -moveVelocity * dot;
                 Debug.Log(force);

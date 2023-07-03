@@ -25,6 +25,7 @@ public class Gun : WeponBase
     //bool _isAiming = false;
     float _fireTime = 0;
     Rigidbody _rb;
+    Coroutine _fireCoroutine;
 
     public FireMode Firetype { get => _fireMode; set => _fireMode = value; }
     public float FireRate { get => _fireRate;}
@@ -62,7 +63,7 @@ public class Gun : WeponBase
         if (_isPause) { return; }
         if (phase == WeponActionPhase.Started)
         {
-            StartCoroutine(Reload());
+            _mono.StartCoroutine(Reload());
         }
     }
 
@@ -70,19 +71,21 @@ public class Gun : WeponBase
     {
         base.OnAttach();
         _rb = _robot.GetComponent<Rigidbody>();
+        _fireCoroutine = _mono.StartCoroutine(Firering());
+    }
+
+    protected override void OnDetach()
+    {
+        _mono.StopCoroutine(_fireCoroutine);
+        base.OnDetach();
     }
     public override void OnTargeting(TargetingData data)
     {
         if (data.TargetingMode == TargetingMode.Position)
         {
-            data.Target = (data.Target - transform.position).normalized;
+            data.Target = (data.Target - _mono.transform.position).normalized;
         }
-        transform.rotation = Quaternion.LookRotation(data.Target, Vector3.up);
-    }
-
-    private void Start()
-    {
-        StartCoroutine(Firering());
+        _mono.transform.rotation = Quaternion.LookRotation(data.Target, Vector3.up);
     }
 
     IEnumerator Firering()
@@ -138,7 +141,7 @@ public class Gun : WeponBase
     {
         if (_bullet && _muzzle)
         {
-            var bullet = Instantiate(_bullet, _muzzle.position, _muzzle.rotation);
+            var bullet = GameObject.Instantiate(_bullet, _muzzle.position, _muzzle.rotation);
             if (_rb)
             {
                 bullet.RigidBody.velocity = _rb.velocity;

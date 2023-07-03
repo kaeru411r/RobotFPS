@@ -9,6 +9,7 @@ using UnityEngine;
 public class MountDrawer : PropertyDrawer
 {
     static Dictionary<Mount, int> _nums = new Dictionary<Mount, int>();
+    bool b = false;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -31,12 +32,12 @@ public class MountDrawer : PropertyDrawer
                 y = mountNameRect.y + EditorGUIUtility.singleLineHeight + 2f
             };
 
-            var units = new UnitBase[supportedUnitProperty.arraySize];
+            var units = new Unit[supportedUnitProperty.arraySize];
             var names = new string[supportedUnitProperty.arraySize];
             for (int i = 0; i < supportedUnitProperty.arraySize; i++)
             {
-                units[i] = supportedUnitProperty.GetArrayElementAtIndex(i).objectReferenceValue as UnitBase;
-                names[i] = units[i].name;
+                units[i] = supportedUnitProperty.GetArrayElementAtIndex(i).objectReferenceValue as Unit;
+                names[i] = units[i]?.name;
             }
             if (!_nums.ContainsKey(mount))
             {
@@ -57,12 +58,12 @@ public class MountDrawer : PropertyDrawer
             _nums[mount] = EditorGUI.Popup(unitRect, "‘•”õ‚·‚éƒ†ƒjƒbƒg", _nums[mount], names);
             unit = mount.Unit;
 
-            if (unit?.name != units[_nums[mount]]?.name)
-            {
-                //mount.Unit = units[_nums[mount]];
-                property.FindPropertyRelative("_unit").SetUnderlyingValue(units[_nums[mount]]);
-                Debug.Log(2);
-            }
+            //if (unit?.name != units[_nums[mount]]?.name)
+            //{
+            //    //mount.Unit = units[_nums[mount]];
+            //    property.FindPropertyRelative("_unit").SetUnderlyingValue(units[_nums[mount]]);
+            //    Debug.Log(2);
+            //}
 
             var supportedUnitRect = new Rect(unitRect)
             {

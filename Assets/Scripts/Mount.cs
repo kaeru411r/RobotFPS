@@ -10,7 +10,7 @@ public class Mount : IPause
     [SerializeField, Tooltip("名前")]
     string _name;
     [SerializeField, Tooltip("装備できるユニットと、その接続パーツのリスト")]
-    UnitBase[] _supportedUnits;
+    Unit[] _supportedUnits;
 
     [SerializeField, HideInInspector]
     bool _isInitialized = false;
@@ -18,7 +18,7 @@ public class Mount : IPause
     RobotBase _robot = null;
     GameObject _mountBase = null;
     [SerializeField, HideInInspector]
-    UnitBase _unit;
+    Unit _unit;
 
 
     /// <summary>ユニット基部</summary>
@@ -39,7 +39,7 @@ public class Mount : IPause
 
     /// <summary>初期化が済んでいるか</summary>
     public bool IsInitialized { get => _isInitialized; }
-    public UnitBase Unit
+    public Unit Unit
     {
         get => _unit;
         set
@@ -66,7 +66,7 @@ public class Mount : IPause
         }
     }
     public string Name { get => _name; set => _name = value; }
-    public UnitBase[] SupportedUnits { get => _supportedUnits; set => _supportedUnits = value; }
+    public Unit[] SupportedUnits { get => _supportedUnits; set => _supportedUnits = value; }
 
 
     /// <summary>
@@ -93,7 +93,7 @@ public class Mount : IPause
 
     void UnitSet()
     {
-        _unit = GameObject.Instantiate(_unit);
+        //_unit = GameObject.Instantiate(_unit);
         if (Robot != null && _unit != null)
         {
             _unit.Attach(Robot, this);

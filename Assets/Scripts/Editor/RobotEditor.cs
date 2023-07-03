@@ -2,12 +2,15 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
+using UnityEngine;
 
 [CustomEditor(typeof(RobotBase))]
 public class RobotEditor : Editor
 {
-    private ReorderableList _reorderableList;
-    private SerializedProperty _mountList;
+    ReorderableList _reorderableList;
+    SerializedProperty _mountList;
+    bool _isMountOpen = false;
+
     private void OnEnable()
     {
         _mountList = serializedObject.FindProperty("_mounts");
@@ -18,18 +21,18 @@ public class RobotEditor : Editor
             var actionData = _mountList.GetArrayElementAtIndex(index);
             EditorGUI.PropertyField(rect, actionData);
         };
-        _reorderableList.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Mount List");
+        _reorderableList.headerHeight = 0f;
         _reorderableList.elementHeightCallback = index => EditorGUI.GetPropertyHeight(_mountList.GetArrayElementAtIndex(index));
     }
     public override void OnInspectorGUI()
     {
-
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+        var robo = target as RobotBase;
+        _isMountOpen = EditorGUILayout.Foldout(_isMountOpen, "aa");
+        if (_isMountOpen)
         {
             _reorderableList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }
 
