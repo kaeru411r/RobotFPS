@@ -93,6 +93,7 @@ public class Mount : IPause
 
     void UnitSet()
     {
+        _unit = GameObject.Instantiate(_unit);
         if (Robot != null && _unit != null)
         {
             _unit.Attach(Robot, this);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,20 @@ using UnityEngine;
 /// <summary>
 /// ユニットのベースクラス
 /// </summary>
-public abstract class UnitBase : MonoBehaviour, IPause
+public abstract class UnitBase : MonoBehaviour, IPause, IUnit
 {
 
     protected bool _isAttach { get; private set; } = false;
     protected RobotBase _robot { get; private set; } = null;
     protected bool _isPause { get; private set; } = false;
 
+    [SerializeField]
+    Guid _id;
+    [SerializeField, ReadOnly]
+    string a;
+
     Mount _mount;
+
     /// <summary>
     /// 機体にユニットを装備する
     /// </summary>
@@ -69,5 +76,11 @@ public abstract class UnitBase : MonoBehaviour, IPause
         {
             Detach();
         }
+    }
+
+    private void Reset()
+    {
+        _id = Guid.NewGuid();
+        a = _id.ToString("D");
     }
 }

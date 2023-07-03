@@ -77,12 +77,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
                 value = 0;
                 //Debug.Log(value);
             }
-            if (Wepon != null)
-            {
-                _onFireActions.Remove(Wepon.OnFire);
-                _onAimActions.Remove(Wepon.OnAim);
-                _onReloadActions.Remove(Wepon.OnReload);
-            }
+            RemoveWeponAction(Wepon);
             _weponNumber = value;
             if (Wepon != null)
             {
@@ -140,6 +135,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     /// <param name="wepon"></param>
     public void RemoveWepon(IWepon wepon)
     {
+        RemoveWeponAction(wepon);
         _wepons.Remove(wepon);
         _onTargetingActions.Remove(wepon.OnTargeting);
         if (WeponNumber >= _wepons.Count)
@@ -151,6 +147,17 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
             WeponNumber = WeponNumber;
         }
     }
+
+    void RemoveWeponAction(IWepon wepon)
+    {
+        if (wepon != null)
+        {
+            _onFireActions.Remove(wepon.OnFire);
+            _onAimActions.Remove(wepon.OnAim);
+            _onReloadActions.Remove(wepon.OnReload);
+        }
+    }
+
     void MountsInit()
     {
         foreach (var mount in _mounts)

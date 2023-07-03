@@ -1,5 +1,6 @@
 
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 
 [CustomEditor(typeof(RobotBase))]
@@ -23,8 +24,11 @@ public class RobotEditor : Editor
     public override void OnInspectorGUI()
     {
 
-        _reorderableList.DoLayoutList();
-        serializedObject.ApplyModifiedProperties();
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+        {
+            _reorderableList.DoLayoutList();
+            serializedObject.ApplyModifiedProperties();
+        }
 
     }
 }
