@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Factor : UnitBase
+public class Factor : UnitFeatureBase
 {
     [SerializeField, Tooltip("")]
     Value[] _values = new Value[0];

@@ -37,7 +37,7 @@ public class MountDrawer : PropertyDrawer
             for (int i = 0; i < supportedUnitProperty.arraySize; i++)
             {
                 units[i] = supportedUnitProperty.GetArrayElementAtIndex(i).objectReferenceValue as Unit;
-                names[i] = units[i]?.name;
+                names[i] = units[i] != null ? units[i].name : "N/A";
             }
             if (!_nums.ContainsKey(mount))
             {

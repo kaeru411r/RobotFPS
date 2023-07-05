@@ -6,7 +6,7 @@ using UnityEngine;
 /// ロボットを移動させるコンポーネント
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class Movement : UnitBase
+public class Movement : UnitFeatureBase
 {
     [SerializeField, Tooltip("基本歩行速度")]
     float _speed;

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 武装のベースクラス
 /// </summary>
-public abstract class WeponBase : UnitBase, IWepon
+public abstract class WeponBase : UnitFeatureBase, IWepon
 {
 
     protected override void OnAttach()

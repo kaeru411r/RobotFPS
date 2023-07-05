@@ -27,7 +27,7 @@ public class RobotEditor : Editor
     public override void OnInspectorGUI()
     {
         var robo = target as RobotBase;
-        _isMountOpen = EditorGUILayout.Foldout(_isMountOpen, "aa");
+        _isMountOpen = EditorGUILayout.Foldout(_isMountOpen, "Mount List");
         if (_isMountOpen)
         {
             _reorderableList.DoLayoutList();

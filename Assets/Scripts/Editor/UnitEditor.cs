@@ -3,24 +3,18 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 
-[CustomEditor(typeof(UnitBase))]
+[CustomEditor(typeof(Unit))]
 public class UnitEditor : Editor
 {
-    private void OnDisable()
-    {
-        
-    }
-
-    private void OnEnable()
-    {
-        
-    }
-
     public override void OnInspectorGUI()
     {
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+        bool isPrefabMode = PrefabStageUtility.GetCurrentPrefabStage() == null;
+        if(isPrefabMode)
         {
-            base.OnInspectorGUI();
+            EditorGUILayout.LabelField("", "プレハブモード以外で設定することは出来ません");
         }
+        EditorGUI.BeginDisabledGroup(isPrefabMode);
+        base.OnInspectorGUI();
+        EditorGUI.EndDisabledGroup();
     }
 }

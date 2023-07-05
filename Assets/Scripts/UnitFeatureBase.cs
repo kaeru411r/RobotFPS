@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// ユニットのベースクラス
 /// </summary>
-public abstract class UnitBase : IPause, IUnit
+public abstract class UnitFeatureBase : IPause, IUnitFeature
 {
 
     protected bool _isAttach { get; private set; } = false;
@@ -19,8 +19,6 @@ public abstract class UnitBase : IPause, IUnit
 
     [SerializeField]
     Guid _id;
-    [SerializeField, ReadOnly]
-    string a;
 
     Mount _mount;
 
@@ -82,9 +80,4 @@ public abstract class UnitBase : IPause, IUnit
         }
     }
 
-    private void Reset()
-    {
-        _id = Guid.NewGuid();
-        a = _id.ToString("D");
-    }
 }

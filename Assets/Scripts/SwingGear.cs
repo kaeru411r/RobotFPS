@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class SwingGear : UnitBase
+public class SwingGear : UnitFeatureBase
 {
     [SerializeField, Tooltip("ù‰ñ‘¬“x")]
     float _turnSpeed;

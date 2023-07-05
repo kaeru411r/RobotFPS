@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Speed : UnitBase
+public class Speed : UnitFeatureBase
 {
     [SerializeField, Tooltip("ë¨ìxï‚ê≥")]
     float _speed = 1;

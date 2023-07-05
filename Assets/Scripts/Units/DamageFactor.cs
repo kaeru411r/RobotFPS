@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 被弾時に受けるダメージに補正をかける
 /// </summary>
-public class DamageFactor : UnitBase
+public class DamageFactor : UnitFeatureBase
 {
     [SerializeField, Tooltip("ダメージ倍率")]
     float _damageFactor;

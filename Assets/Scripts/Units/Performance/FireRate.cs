@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireRate : UnitBase
+public class FireRate : UnitFeatureBase
 {
     [SerializeField, Tooltip("ËŒ‚ƒŒ[ƒg”{—¦")]
     float _rateFactor = 1;
