@@ -3,15 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//[DisallowMultipleComponent]
 public class Unit : MonoBehaviour
 {
     [SelectableSerializeReference, SerializeReference, Tooltip("機能一覧")]
     IUnitFeature[] _features;
     [SerializeField, ReadOnly, Tooltip("ID")]
     string _idPreview;
+    [SerializeField, HideInInspector]
+    Guid _id;
 
     Mount _mount;
-    Guid _id;
 
     /// <summary>
     /// 機体にユニットを装備する
