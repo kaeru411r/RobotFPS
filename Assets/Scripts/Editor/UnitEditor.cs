@@ -13,7 +13,11 @@ public class UnitEditor : Editor
         var currentPrefabStage = PrefabStageUtility.GetCurrentPrefabStage();
         var isPrefabMode = currentPrefabStage != null;
         var isEditaleRoot = prefabNearestRoot != null && prefabRoot != prefabNearestRoot;
-        if (!isPrefabMode || isEditaleRoot)
+        if (!isPrefabMode)
+        {
+            EditorGUILayout.LabelField("", "プレハブモード以外で設定することは出来ません");
+        }
+        else if (isEditaleRoot)
         {
             EditorGUILayout.LabelField("", "プレハブモード以外で設定することは出来ません");
         }

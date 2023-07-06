@@ -13,7 +13,7 @@ using System.Linq;
 [RequireComponent(typeof(HitPoint))]
 public class RobotBase : MonoBehaviour, IWepon, IPause
 {
-    [SerializeField, Tooltip("マウント"), HideInInspector]
+    [SerializeField, Tooltip("マウント")/*, HideInInspector*/]
     Mount[] _mounts = new Mount[0];
     [SerializeField, Tooltip("最大体力")]
     int _maxHp = 0;
