@@ -3,17 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[DisallowMultipleComponent]
-public class Unit : MonoBehaviour
+/// <summary>
+/// このクラスを継承するクラスは
+/// OnEnableの初めにOnEnableを、
+/// OnDisable、OnDestroyの最後にOnDisable、OnDestroyを呼ぶこと
+/// </summary>
+public class Unit : MonoBehaviour, IIDHolder
 {
     [SelectableSerializeReference, SerializeReference, Tooltip("機能一覧")]
-    IUnitFeature[] _features;
-    [SerializeField, ReadOnly, Tooltip("ID")]
-    string _idPreview;
-    [SerializeField, HideInInspector]
-    Guid _id;
+    public IUnitFeature[] _features;
+    [SerializeField]
+    ID _id;
 
-    Mount _mount;
+    RobotBase _robot;
+
+    public ID ID => _id;
+
+
 
     /// <summary>
     /// 機体にユニットを装備する
@@ -21,11 +27,12 @@ public class Unit : MonoBehaviour
     /// <param name="robot"></param>
     public void Attach(RobotBase robot, Mount mount)
     {
-        for(int i = 0; i < _features.Length; i++)
+        _robot = robot;
+        for (int i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
-                _features[i].Attach(robot, mount);
+                _features[i]?.Attach(robot, mount);
             }
         }
     }
@@ -37,9 +44,10 @@ public class Unit : MonoBehaviour
         {
             if (_features[i] != null)
             {
-                _features[i].Detach();
+                _features[i]?.Detach();
             }
         }
+        _robot = null;
     }
 
     public void Pause()
@@ -48,7 +56,7 @@ public class Unit : MonoBehaviour
         {
             if (_features[i] != null)
             {
-                _features[i].Pause();
+                _features[i]?.Pause();
             }
         }
     }
@@ -59,15 +67,47 @@ public class Unit : MonoBehaviour
         {
             if (_features[i] != null)
             {
-                _features[i].Resume();
+                _features[i]?.Resume();
             }
         }
     }
 
-
-    private void Reset()
+    private void OnEnable()
     {
-        _id = Guid.NewGuid();
-        _idPreview = _id.ToString("D");
+        for (int i = 0; i < _features.Length; i++)
+        {
+            if (_features[i] != null)
+            {
+                _features[i]?.Resume();
+            }
+        }
     }
+
+    private void OnDisable()
+    {
+
+        for (int i = 0; i < _features.Length; i++)
+        {
+            if (_features[i] != null)
+            {
+                _features[i]?.Pause();
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_robot)
+        {
+
+            for (int i = 0; i < _features.Length; i++)
+            {
+                if (_features[i] != null)
+                {
+                    _features[i]?.Detach();
+                }
+            }
+        }
+    }
+
 }

@@ -1,0 +1,9 @@
+diff a/Assets/Scripts/RobotBase.cs b/Assets/Scripts/RobotBase.cs	(rejected hunks)
+@@ -4,6 +4,7 @@
+ using UnityEngine;
+ using UnityEngine.InputSystem;
+ using System.Linq;
++using Unity.VisualScripting;
+ 
+ /// <summary>
+ /// �@�̂̑����Ǘ��N���X

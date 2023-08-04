@@ -11,9 +11,10 @@ using System.Linq;
 /// 基本的に機体のほとんどのやり取りをこのクラスを介して行う
 /// </summary>
 [RequireComponent(typeof(HitPoint))]
-public class RobotBase : MonoBehaviour, IWepon, IPause
+[Serializable]
+public class RobotBase : MonoBehaviour, IWepon, IPause, IIDHolder
 {
-    [SerializeField, Tooltip("マウント")/*, HideInInspector*/]
+    [SerializeField, Tooltip("マウント")]
     Mount[] _mounts = new Mount[0];
     [SerializeField, Tooltip("最大体力")]
     int _maxHp = 0;
@@ -25,6 +26,8 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     float _turnSpeed;
     [SerializeField, Tooltip("性能値")]
     Performance _performance = new Performance();
+    [SerializeField]
+    ID _id;
 
     List<IWepon> _wepons = new List<IWepon>();
     int _weponNumber = 0;
@@ -99,6 +102,7 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
     public Performance Performance { get => _performance; set => _performance = value; }
     public List<Action> OnDown { get => _onDown; set => _onDown = value; }
+    public ID ID => _id;
 
     public void Init()
     {

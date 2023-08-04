@@ -13,15 +13,17 @@ public class UnitEditor : Editor
         var currentPrefabStage = PrefabStageUtility.GetCurrentPrefabStage();
         var isPrefabMode = currentPrefabStage != null;
         var isEditaleRoot = prefabNearestRoot != null && prefabRoot != prefabNearestRoot;
-        if (!isPrefabMode)
+        var isPlaying = UnityEngine.Application.isPlaying;
+        if (isPlaying) { }
+        else if (!isPrefabMode)
         {
             EditorGUILayout.LabelField("", "プレハブモード以外で設定することは出来ません");
         }
         else if (isEditaleRoot)
         {
-            EditorGUILayout.LabelField("", "プレハブモード以外で設定することは出来ません");
+            EditorGUILayout.LabelField("", "プレハブのルートが異なるため設定することが出来ません");
         }
-        EditorGUI.BeginDisabledGroup(!isPrefabMode || isEditaleRoot);
+        EditorGUI.BeginDisabledGroup(!isPlaying && (!isPrefabMode || isEditaleRoot));
         base.OnInspectorGUI();
         EditorGUI.EndDisabledGroup();
     }

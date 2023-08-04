@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// ユニットのベースクラス
 /// </summary>
-public abstract class UnitFeatureBase : IPause, IUnitFeature
+public abstract class UnitFeatureBase : IUnitFeature
 {
 
     protected bool _isAttach { get; private set; } = false;
@@ -22,10 +22,6 @@ public abstract class UnitFeatureBase : IPause, IUnitFeature
 
     Mount _mount;
 
-    /// <summary>
-    /// 機体にユニットを装備する
-    /// </summary>
-    /// <param name="robot"></param>
     public void Attach(RobotBase robot, Mount mount)
     {
         _isAttach = true;
@@ -62,22 +58,4 @@ public abstract class UnitFeatureBase : IPause, IUnitFeature
     protected virtual void OnDetach() { }
     protected virtual void OnPause() { }
     protected virtual void OnResume() { }
-
-
-    private void OnEnable()
-    {
-        Resume();
-    }
-    private void OnDisable()
-    {
-        Pause();
-    }
-    private void OnDestroy()
-    {
-        if (_robot)
-        {
-            Detach();
-        }
-    }
-
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3708722864410708265
+--- !u!1 &2606165225699773606
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 871371594923378105}
-  - component: {fileID: 6479131925359885274}
+  - component: {fileID: 3796227518830101490}
+  - component: {fileID: 940029822562100211}
   m_Layer: 0
-  m_Name: Rate x2
+  m_Name: New Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &871371594923378105
+--- !u!4 &3796227518830101490
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708722864410708265}
+  m_GameObject: {fileID: 2606165225699773606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,27 +32,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6479131925359885274
+--- !u!114 &940029822562100211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3708722864410708265}
+  m_GameObject: {fileID: 2606165225699773606}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d3354bb5e04dda4685c016a3d04ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _features:
-  - rid: 3590837975841243140
-  _idPreview: 6d80403c-7853-4ede-86aa-8705101abae7
+  - rid: 3202652005076566018
+  _id:
+    _id: 746421240
   references:
     version: 2
     RefIds:
-    - rid: 3590837975841243140
-      type: {class: Factor, ns: , asm: Assembly-CSharp}
+    - rid: 3202652005076566018
+      type: {class: FireRate, ns: , asm: Assembly-CSharp}
       data:
-        _values:
-        - value: 2
-          type: 3
+        _rateFactor: 1
