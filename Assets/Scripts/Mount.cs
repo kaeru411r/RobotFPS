@@ -85,7 +85,6 @@ public class Mount : IPause
         _isInitialized = true;
         UnitSet();
         DataTest();
-        var id = new ID();
     }
 
     void DataTest()

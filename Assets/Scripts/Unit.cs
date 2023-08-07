@@ -9,16 +9,12 @@ using UnityEngine;
 /// OnEnableの初めにOnEnableを、
 /// OnDisable、OnDestroyの最後にOnDisable、OnDestroyを呼ぶこと
 /// </summary>
-public class Unit : MonoBehaviour, IIDHolder, IConfigurable
+public class Unit : MonoBehaviour, IConfigurable
 {
     [SelectableSerializeReference, SerializeReference, Tooltip("機能一覧")]
     public IUnitFeature[] _features;
-    [SerializeField]
-    ID _id;
 
     RobotBase _robot;
-
-    public ID ID => _id;
 
 
 

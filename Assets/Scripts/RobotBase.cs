@@ -12,7 +12,7 @@ using Unity.VisualScripting;
 /// </summary>
 [RequireComponent(typeof(HitPoint))]
 [Serializable]
-public class RobotBase : MonoBehaviour, IWepon, IPause, IIDHolder
+public class RobotBase : MonoBehaviour, IWepon, IPause
 {
     [SerializeField, Tooltip("マウント")]
     Mount[] _mounts = new Mount[0];
@@ -26,8 +26,6 @@ public class RobotBase : MonoBehaviour, IWepon, IPause, IIDHolder
     float _turnSpeed;
     [SerializeField, Tooltip("性能値")]
     Performance _performance = new Performance();
-    [SerializeField]
-    ID _id;
 
     List<IWepon> _wepons = new List<IWepon>();
     int _weponNumber = 0;
@@ -102,7 +100,6 @@ public class RobotBase : MonoBehaviour, IWepon, IPause, IIDHolder
     public float TurnSpeed { get => _turnSpeed; set => _turnSpeed = value; }
     public Performance Performance { get => _performance; set => _performance = value; }
     public List<Action> OnDown { get => _onDown; set => _onDown = value; }
-    public ID ID => _id;
 
     public void Init()
     {
