@@ -110,9 +110,6 @@ public class RobotBase : MonoBehaviour, IWepon, IPause, IIDHolder
         _hp = GetComponent<HitPoint>();
         _hp.HPReset(HpReset(_maxHp));
         _hp.OnDownAction += Down;
-        var unit1 = _mounts[0].SupportedUnits[0]._features[0];
-        var json = JsonUtility.ToJson(_mounts[0].SupportedUnits[0]._features[0]);
-        Debug.Log(json);
         //_movement = GetComponent<Movement>();
         //_movement.Speed = _speed;
         //_movement.BackCorrection = _speedCorrection.y;

@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 
@@ -14,11 +17,13 @@ public class Mount : IPause
 
     [SerializeField, HideInInspector]
     bool _isInitialized = false;
+    [SerializeField, HideInInspector]
+    Unit _unit;
 
     RobotBase _robot = null;
     GameObject _mountBase = null;
-    [SerializeField, HideInInspector]
-    Unit _unit;
+
+
 
 
     /// <summary>ƒ†ƒjƒbƒgŠî•”</summary>
@@ -79,6 +84,14 @@ public class Mount : IPause
         _robot = robot;
         _isInitialized = true;
         UnitSet();
+        DataTest();
+        var id = new ID();
+    }
+
+    void DataTest()
+    {
+        var json = Seve();
+        Debug.Log($"{Name}\n{json}");
     }
 
     public void Pause()
@@ -91,6 +104,23 @@ public class Mount : IPause
         _unit.Resume();
     }
 
+    public string Seve()
+    {
+
+        var config = new Config();
+        for (int i = 0; i < _supportedUnits.Length; i++)
+        {
+            if (_supportedUnits[i] == null) { continue; }
+            config.Add(_supportedUnits[i].Seve());
+
+            if (_supportedUnits[i] == _unit)
+            {
+                config.UseUnitIndex = i;
+            }
+        }
+        return JsonUtility.ToJson(config);
+    }
+
     void UnitSet()
     {
         //_unit = GameObject.Instantiate(_unit);
@@ -99,4 +129,40 @@ public class Mount : IPause
             _unit.Attach(Robot, this);
         }
     }
+
+    [Serializable]
+    public class Config
+    {
+        public int UseUnitIndex;
+        public List<string> Settings;
+
+        public Config(int index, string[] settings)
+        {
+            UseUnitIndex = index;
+            Settings = settings.ToList();
+        }
+
+        public Config(int index)
+        {
+            UseUnitIndex = index;
+            Settings = new List<string>();
+        }
+        public Config(int index, List<string> settings)
+        {
+            UseUnitIndex = index;
+            Settings = settings;
+        }
+
+        public Config()
+        {
+            Settings = new List<string>();
+        }
+
+        public void Add(string value)
+        {
+            Settings.Add(value);
+        }
+
+    }
+
 }

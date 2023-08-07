@@ -1,7 +1,7 @@
 /// <summary>
 /// ユニットが継承するインターフェース
 /// </summary>
-public interface IUnitFeature : IPause
+public interface IUnitFeature : IPause, IConfigurable
 {
     /// <summary>
     /// 機体にユニットを装備する

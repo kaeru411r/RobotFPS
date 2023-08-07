@@ -3,13 +3,13 @@ using UnityEditor;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 using UnityEngine;
-
+using NUnit.Framework.Constraints;
 
 [CustomPropertyDrawer(typeof(Mount))]
 public class MountDrawer : PropertyDrawer
 {
     static Dictionary<Mount, int> _nums = new Dictionary<Mount, int>();
-    bool b = false;
+
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -94,5 +94,18 @@ public class MountDrawer : PropertyDrawer
         }
 
         return height;
+    }
+
+
+    struct Data
+    {
+        public Data(Unit[] units)
+        {
+            UnitsCount = units.Length;
+            Units = units;
+        }
+
+        public int UnitsCount;
+        public Unit[] Units;
     }
 }

@@ -13,7 +13,7 @@ public abstract class UnitFeatureBase : IUnitFeature
     protected RobotBase _robot { get; private set; } = null;
     protected bool _isPause { get; private set; } = false;
     protected GameObject _gameObject { get; private set; }
-    protected MonoBehaviour _mono {  get; private set; }
+    protected MonoBehaviour _mono { get; private set; }
 
     public MonoBehaviour Mono { get => _mono; }
 
@@ -53,9 +53,13 @@ public abstract class UnitFeatureBase : IUnitFeature
         _isPause = false;
         OnResume();
     }
+    public virtual string Seve() { return null; }
+
+    public virtual void Load(string json) { }
 
     protected virtual void OnAttach() { }
     protected virtual void OnDetach() { }
     protected virtual void OnPause() { }
     protected virtual void OnResume() { }
+
 }
