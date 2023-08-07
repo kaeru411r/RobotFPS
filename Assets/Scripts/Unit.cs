@@ -25,7 +25,7 @@ public class Unit : MonoBehaviour, IConfigurable
     public void Attach(RobotBase robot, Mount mount)
     {
         _robot = robot;
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -37,7 +37,7 @@ public class Unit : MonoBehaviour, IConfigurable
 
     public void Detach()
     {
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -49,7 +49,7 @@ public class Unit : MonoBehaviour, IConfigurable
 
     public void Pause()
     {
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -60,7 +60,7 @@ public class Unit : MonoBehaviour, IConfigurable
 
     public void Resume()
     {
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -74,7 +74,12 @@ public class Unit : MonoBehaviour, IConfigurable
         var config = new Config();
         foreach(var feature in _features)
         {
-            config.Add(feature?.Seve());
+            var featureConfig = "";
+            if(feature != null)
+            {
+                featureConfig = feature.Seve();
+            }
+            config.Add(featureConfig);
         }
         return JsonUtility.ToJson(config);
     }
@@ -83,7 +88,7 @@ public class Unit : MonoBehaviour, IConfigurable
 
     private void OnEnable()
     {
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -95,7 +100,7 @@ public class Unit : MonoBehaviour, IConfigurable
     private void OnDisable()
     {
 
-        for (int i = 0; i < _features.Length; i++)
+        for (var i = 0; i < _features.Length; i++)
         {
             if (_features[i] != null)
             {
@@ -109,7 +114,7 @@ public class Unit : MonoBehaviour, IConfigurable
         if (_robot)
         {
 
-            for (int i = 0; i < _features.Length; i++)
+            for (var i = 0; i < _features.Length; i++)
             {
                 if (_features[i] != null)
                 {

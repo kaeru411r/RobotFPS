@@ -34,7 +34,7 @@ public class MountDrawer : PropertyDrawer
 
             var units = new Unit[supportedUnitProperty.arraySize];
             var names = new string[supportedUnitProperty.arraySize];
-            for (int i = 0; i < supportedUnitProperty.arraySize; i++)
+            for (var i = 0; i < supportedUnitProperty.arraySize; i++)
             {
                 units[i] = supportedUnitProperty.GetArrayElementAtIndex(i).objectReferenceValue as Unit;
                 names[i] = units[i] != null ? units[i].name : "N/A";
@@ -47,7 +47,7 @@ public class MountDrawer : PropertyDrawer
             var unit = mount.Unit;
             _nums[mount] = 0;
 
-            for (int i = 0; i < units.Length; i++)
+            for (var i = 0; i < units.Length; i++)
             {
                 if (unit && units[i] && units[i].name == unit.name)
                 {

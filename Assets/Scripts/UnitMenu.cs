@@ -31,7 +31,7 @@ public class UnitMenu : MonoBehaviour
     {
         _canvas1?.gameObject.SetActive(false);
         gameObject.SetActive(true);
-        for (int i = 0; i < _buttons.Length; i++)
+        for (var i = 0; i < _buttons.Length; i++)
         {
             _canvas2?.gameObject.SetActive(true);
             if (i < _robot.Mounts.Length)
@@ -82,7 +82,7 @@ public class UnitMenu : MonoBehaviour
     {
         _canvas2?.gameObject.SetActive(false);
         _canvas3?.gameObject.SetActive(true);
-        for (int i = 0; i < Mathf.Min(_buttons.Length); i++)
+        for (var i = 0; i < Mathf.Min(_buttons.Length); i++)
         {
             if (i < _robot.Mounts[index].SupportedUnits.Length)
             {

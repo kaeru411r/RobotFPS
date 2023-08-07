@@ -8,7 +8,7 @@ using UnityEngine;
 
 /// <summary>装備をロボットに装着する</summary>
 [System.Serializable]
-public class Mount : IPause
+public class Mount : IPause, IConfigurable
 {
     [SerializeField, Tooltip("名前")]
     string _name;
@@ -84,15 +84,7 @@ public class Mount : IPause
         _robot = robot;
         _isInitialized = true;
         UnitSet();
-        DataTest();
     }
-
-    void DataTest()
-    {
-        var json = Seve();
-        Debug.Log($"{Name}\n{json}");
-    }
-
     public void Pause()
     {
         _unit.Pause();
@@ -105,12 +97,15 @@ public class Mount : IPause
 
     public string Seve()
     {
-
         var config = new Config();
-        for (int i = 0; i < _supportedUnits.Length; i++)
+        for (var i = 0; i < _supportedUnits.Length; i++)
         {
-            if (_supportedUnits[i] == null) { continue; }
-            config.Add(_supportedUnits[i].Seve());
+            var unitConfig = "";
+            if (_supportedUnits[i] != null)
+            {
+                unitConfig = _supportedUnits[i].Seve();
+            }
+            config.Add(unitConfig);
 
             if (_supportedUnits[i] == _unit)
             {
@@ -118,6 +113,16 @@ public class Mount : IPause
             }
         }
         return JsonUtility.ToJson(config);
+    }
+
+    public void Load(string json)
+    {
+        var data = JsonUtility.FromJson<Config>(json);
+        _unit = _supportedUnits[data.UseUnitIndex];
+        for (var i = 0; i < _supportedUnits.Length; i++)
+        {
+            _supportedUnits[i]?.Load(data.Settings[i]);
+        }
     }
 
     void UnitSet()
@@ -128,6 +133,7 @@ public class Mount : IPause
             _unit.Attach(Robot, this);
         }
     }
+
 
     [Serializable]
     public class Config

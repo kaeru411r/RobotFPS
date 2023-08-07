@@ -12,7 +12,7 @@ using Unity.VisualScripting;
 /// </summary>
 [RequireComponent(typeof(HitPoint))]
 [Serializable]
-public class RobotBase : MonoBehaviour, IWepon, IPause
+public class RobotBase : MonoBehaviour, IWepon, IPause, IConfigurable
 {
     [SerializeField, Tooltip("ƒ}ƒEƒ“ƒg")]
     Mount[] _mounts = new Mount[0];
@@ -148,6 +148,30 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
             WeponNumber = WeponNumber;
         }
     }
+    public string Seve()
+    {
+        var config = new Config();
+        for (var i = 0; i < _mounts.Length; i++)
+        {
+            var mountConfig = "";
+            if (_mounts[i] != null)
+            {
+                mountConfig = _mounts[i].Seve();
+            }
+            config.Add(mountConfig);
+        }
+
+        return JsonUtility.ToJson(config);
+    }
+
+    public void Load(string json)
+    {
+        var config = JsonUtility.FromJson<Config>(json);
+        for (int i = 0; i < _mounts.Length; i++)
+        {
+            _mounts[i]?.Load(config.MountsConfig[i]);
+        }
+    }
 
     void RemoveWeponAction(IWepon wepon)
     {
@@ -229,6 +253,11 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
     private void Awake()
     {
         Init();
+        if (name == "Robot")
+        {
+            Load("{\"MountsConfig\":[\"{\\\"UseUnitIndex\\\":1,\\\"Settings\\\":[\\\"{\\\\\\\"Values\\\\\\\":[\\\\\\\"\\\\\\\",\\\\\\\"\\\\\\\"]}\\\",\\\"{\\\\\\\"Values\\\\\\\":[\\\\\\\"\\\\\\\"]}\\\",\\\"\\\",\\\"\\\",\\\"\\\"]}\",\"{\\\"UseUnitIndex\\\":0,\\\"Settings\\\":[\\\"\\\",\\\"\\\",\\\"\\\",\\\"\\\",\\\"\\\"]}\",\"{\\\"UseUnitIndex\\\":0,\\\"Settings\\\":[\\\"\\\"]}\",\"{\\\"UseUnitIndex\\\":0,\\\"Settings\\\":[\\\"\\\",\\\"\\\",\\\"\\\"]}\"]}");
+        }
+        Debug.Log(Seve());
     }
 
     private void OnDestroy()
@@ -262,4 +291,24 @@ public class RobotBase : MonoBehaviour, IWepon, IPause
         Destroy(gameObject);
     }
 
+    [Serializable]
+    class Config
+    {
+        public List<string> MountsConfig;
+
+        public Config()
+        {
+            MountsConfig = new List<string>();
+        }
+
+        public Config(List<string> mountsConfig)
+        {
+            MountsConfig = mountsConfig;
+        }
+
+        public void Add(string mountConfig)
+        {
+            MountsConfig.Add(mountConfig);
+        }
+    }
 }
